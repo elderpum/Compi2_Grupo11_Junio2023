@@ -4,8 +4,8 @@ class NodeAST(object):
         self.valor = valor_
         self.hijos = []
 
-    def setHijos(self, hijos):
-        self.hijos = hijos
+    def setHijos(self, hijos_):
+        self.hijos = hijos_
 
     def setValor(self, cadena_):
         self.valor = cadena_

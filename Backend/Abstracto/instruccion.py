@@ -1,6 +1,6 @@
-from ..Tabla.Tabla_simbolos import Tabla_Simbolo
+from ..Tabla.Tabla_simbolos import TablaSimbolo
 from ..Tabla.Arbol import Arbol
-from ..Tabla.NodeAST import NodoAST
+from ..Tabla.NodeAST import NodeAST
 from abc import ABC, abstractmethod
 
 
@@ -13,9 +13,9 @@ class Instruccion(ABC):
         super().__init__()
 
     @abstractmethod
-    def Ejecutar(self, arbol: Arbol, tabla: Tabla_Simbolo):
+    def Ejecutar(self, arbol_: Arbol, tabla_: TablaSimbolo):
         pass
 
     @abstractmethod
-    def getNodo(self) -> NodoAST:
+    def getNodo(self) -> NodeAST:
         pass

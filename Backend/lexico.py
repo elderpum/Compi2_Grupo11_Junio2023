@@ -1,6 +1,7 @@
 import re
 import ply.lex as lex
 
+
 errores = []
 
 # Lista de palabras reservadas
