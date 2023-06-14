@@ -24,11 +24,11 @@ class TablaSimbolo(object):
         self.tabla[simbolo.getID()] = simbolo
         return True
     
-    def getvariable(self, ID, funcion = False):
+    def getvariable(self, ID_, funcion_ = False):
         entorno = self
         while entorno is not None:
             try:
-                variable = entorno.getTable()[ID]
+                variable = entorno.getTable()[ID_]
             except Exception:
                 variable = None
 
