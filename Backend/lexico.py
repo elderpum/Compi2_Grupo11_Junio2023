@@ -61,7 +61,7 @@ tokens = [
     'LLAVEIZQ',
     'LLAVEDER',
     'ID',
-    'ENTERO',
+    'NUMBER',
     'DECIMAL',
     'CADENA',
 ] + list(reserved.values())
