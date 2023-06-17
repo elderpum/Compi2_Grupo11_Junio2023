@@ -15,22 +15,22 @@ Dic_Aritmetica = {
 
 D_Relacional = {
     # ===
-    "NUMBER===NUMBER": Tipos.BOOL,
-    "STRING===STRING": Tipos.BOOL,
-    "BOOL===BOOL": Tipos.BOOL,
-    "STRUCT===STRUCT": Tipos.BOOL,
-    "ARRAY===ARRAY": Tipos.BOOL,
+    "NUMBER===NUMBER": Tipos.BOOLEAN,
+    "STRING===STRING": Tipos.BOOLEAN,
+    "BOOL===BOOL": Tipos.BOOLEAN,
+    "STRUCT===STRUCT": Tipos.BOOLEAN,
+    "ARRAY===ARRAY": Tipos.BOOLEAN,
  
-    "NUMBER!==NUMBER": Tipos.BOOL,
-    "STRING!==STRING": Tipos.BOOL,
-    "BOOL!==BOOL": Tipos.BOOL,
-    "STRUCT!==STRUCT": Tipos.BOOL,
-    "ARRAY!==ARRAY": Tipos.BOOL,
+    "NUMBER!==NUMBER": Tipos.BOOLEAN,
+    "STRING!==STRING": Tipos.BOOLEAN,
+    "BOOL!==BOOL": Tipos.BOOLEAN,
+    "STRUCT!==STRUCT": Tipos.BOOLEAN,
+    "ARRAY!==ARRAY": Tipos.BOOLEAN,
 
-    "NUMBER!>=NUMBER": Tipos.BOOL,
-    "NUMBER<=NUMBER": Tipos.BOOL,
-    "NUMBER>NUMBER": Tipos.BOOL,
-    "NUMBER<NUMBER": Tipos.BOOL,
+    "NUMBER!>=NUMBER": Tipos.BOOLEAN,
+    "NUMBER<=NUMBER": Tipos.BOOLEAN,
+    "NUMBER>NUMBER": Tipos.BOOLEAN,
+    "NUMBER<NUMBER": Tipos.BOOLEAN,
 }
 
 D_LOGICA = {
@@ -42,10 +42,13 @@ D_LOGICA = {
 
 D_NATIVA = {
     #tofixed
-    'TOFIXED-NUMBER':['float(math.trunc(valor))', Tipos.NUMBER],
+    'TOFIXED-NUMBER-NUMBER':['float(math.trunc(valor))', Tipos.NUMBER],
+    'CONCAT-STRING-STRING':['', Tipos.STRING],
+    'CONCAT-ARRAY-STRING':['', Tipos.ARRAY],
     #tostring
     'TOSTRING-NUMBER':['str(valor)',Tipos.STRING],
-    
+    'TOSTRING-BOOLEAN':['str(valor)',Tipos.STRING],
+
     #uppercase y lowercase
     'UPPERCASE-STRING':['valor.upper()',Tipos.STRING],
     'LOWERCASE-STRING':['valor.lower()',Tipos.STRING],

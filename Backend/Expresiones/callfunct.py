@@ -21,7 +21,7 @@ class LLAMADA_EXP(Instruccion):
     def Ejecutar(self, arbol_: Arbol, tabla_: TablaSimbolo):
         variable = tabla_.getVariable(self.id)
         if variable is None:
-            return Error("Sintactico","La función o struct indicado no existe", self.fila, self.columna)
+            return Error("Sintactico","La función indicado no existe", self.fila, self.columna)
         else:
             if variable.getTipo() == Tipos.STRUCT:
                 a = 0
@@ -85,20 +85,20 @@ class LLAMADA_EXP(Instruccion):
         
     def getNodo(self) -> NodeAST:
         nodo = NodeAST("LLAMADA")
-        nodo.agregarHijo(self.id)
-        nodo.agregarHijo("(")
+        nodo.addHijo(self.id)
+        nodo.addHijo("(")
         para = None
         anterior = None
         if len(self.parametros):
             for par in self.parametros:
                 para = NodeAST("PARAMETROS")
                 if anterior is not None:
-                    para.agregarHijoNodo(anterior)
-                para.agregarHijoNodo(par.getNodo())
+                    para.addHijoNodo(anterior)
+                para.addHijoNodo(par.getNodo())
                 anterior = para
-            nodo.agregarHijoNodo(para)
-        nodo.agregarHijo(")")
-        nodo.agregarHijo(";")
+            nodo.addHijoNodo(para)
+        nodo.addHijo(")")
+        nodo.addHijo(";")
         return nodo
     
     

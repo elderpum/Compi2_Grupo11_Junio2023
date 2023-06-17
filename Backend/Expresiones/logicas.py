@@ -1,33 +1,32 @@
-from ..ABSTRACT.instruccion import Instruccion
-from ..ABSTRACT.NodoAST import NodoAST
-from ..GENERAL.Arbol import Arbol
-from ..GENERAL.Tabla_Simbolo import Tabla_Simbolo
-from ..GENERAL.Tipo import Tipos, Logicas
-from ..GENERAL.error import Error
-from ..DICCIONARIO.Diccionario import D_LOGICA
 
+from ..Diccionario.Diccionario import D_LOGICA
+from ..Abstracto.instruccion import Instruccion
+from ..Tabla.NodeAST import NodeAST
+from ..Tabla.Arbol import Arbol
+from ..Tabla.Tabla_simbolos import TablaSimbolo
+from ..Tabla.Tipo import Logicas, Tipos
+from ..Tabla.Errores import Error
 
 class Logica(Instruccion):
 
-    def __init__(self, operador:Logicas, fila, columna, op1, op2=None):
-        super().__init__(Tipos.BOOL, fila, columna)
-        self.operador = operador
-        self.op1 = op1
-        self.op2 = op2
+    def __init__(self, operador_:Logicas, fila_, columna_, op1_, op2_=None):
+        super().__init__(Tipos.BOOLEAN, fila_, columna_)
+        self.operador = operador_
+        self.op1 = op1_
+        self.op2 = op2_
 
-    def Ejecutar(self, arbol: Arbol, tabla: Tabla_Simbolo):
+    def Ejecutar(self, arbol_: Arbol, tabla_: TablaSimbolo):
         izq = None
         der = None        
         operando = ''        
         if self.op2 is not None:
-            
-            izq = self.op1.Ejecutar(arbol, tabla)
+            izq = self.op1.Ejecutar(arbol_, tabla_)
             if isinstance(izq, Error): return izq
             if self.operador.value == "&&":
                 if not izq: return izq
             if self.operador.value == "||":
                 if izq: return izq
-            der = self.op2.Ejecutar(arbol, tabla)
+            der = self.op2.Ejecutar(arbol_, tabla_)
             if isinstance(der, Error): return der
             try:
                 operando = D_LOGICA[self.op1.tipo.value+self.operador.value+self.op2.tipo.value]
@@ -36,7 +35,7 @@ class Logica(Instruccion):
                              " con el operando logico "+operando, self.fila, self.columna)
             return eval(f'izq {operando} der')
         else:
-            izq = self.op1.Ejecutar(arbol, tabla)
+            izq = self.op1.Ejecutar(arbol_, tabla_)
             if isinstance(izq, Error): return izq
             try:
                 operando = D_LOGICA[self.operador.value+self.op1.tipo.value]
@@ -45,13 +44,13 @@ class Logica(Instruccion):
 
             return eval(f'{operando} izq')
 
-    def getNodo(self) -> NodoAST:
-        nodo = NodoAST("LOGICA")
+    def getNodo(self) -> NodeAST:
+        nodo = NodeAST("LOGICA")
         if not self.op2 is None:
-            nodo.agregarHijo(self.operador.value)
-            nodo.agregarHijoNodo(self.op1.getNodo())
+            nodo.addHijo(self.operador.value)
+            nodo.addHijoNodo(self.op1.getNodo())
         else:
-            nodo.agregarHijoNodo(self.op1.getNodo())
-            nodo.agregarHijo(self.operador.value)
-            nodo.agregarHijoNodo(self.op2.getNodo())
+            nodo.addHijoNodo(self.op1.getNodo())
+            nodo.addHijo(self.operador.value)
+            nodo.addHijoNodo(self.op2.getNodo())
         return nodo

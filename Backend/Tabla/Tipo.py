@@ -24,7 +24,7 @@ class Aritmeticos(Enum):
 class Nativas(Enum):
     TOFIXED = 'TOFIXED'
     TOEXPONENTIAL = 'TOEXPONENTIAL'
-    TYPEOF = 'TOSTRING'
+    TOSTRING = 'TOSTRING'
     LOWERCASE = 'LOWERCASE'
     UPPERCASE = 'UPPERCASE'
     SPLIT = 'SPLIT'
