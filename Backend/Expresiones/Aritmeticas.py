@@ -8,11 +8,11 @@ from ..Diccionario.Diccionario import Dic_Aritmetica
 import math
 class Aritmetica(Instruccion):
 
-    def __init__(self, operador: Aritmeticos, fila, columna, op1, op2=None):
-        super().__init__(Tipos.ENTERO, fila, columna)
-        self.operador = operador
-        self.op1 = op1
-        self.op2 = op2 
+    def __init__(self, operador_: Aritmeticos, fila_, columna_, op1_, op2_=None):
+        super().__init__(Tipos.ENTERO, fila_, columna_)
+        self.operador = operador_
+        self.op1 = op1_
+        self.op2 = op2_
         
     def Ejecutar(self, arbol_: Arbol, tabla_: TablaSimbolo):
         izq = None
@@ -32,7 +32,7 @@ class Aritmetica(Instruccion):
                              " con el operando "+self.operador.value, self.fila, self.columna)
             if operando.value == "^":
                 res = math.pow(izq, der)
-                if self.tipo == Tipos.ENTERO:
+                if self.tipo == Tipos.NUMBER:
                     return int(res)
                 else:
                     return res
@@ -52,10 +52,10 @@ class Aritmetica(Instruccion):
     def getNodo(self) -> NodeAST:
         nodo = NodeAST("ARITMETICA")
         if  self.op2 is None:
-            nodo.agregarHijo(self.operador.value)
-            nodo.agregarHijoNodo(self.op1.getNodo())
+            nodo.addHijo(self.operador.value)
+            nodo.addHijoNodo(self.op1.getNodo())
         else:
-            nodo.agregarHijoNodo(self.op1.getNodo())
-            nodo.agregarHijo(self.operador.value)
-            nodo.agregarHijoNodo(self.op2.getNodo())
+            nodo.addHijoNodo(self.op1.getNodo())
+            nodo.addHijo(self.operador.value)
+            nodo.addHijoNodo(self.op2.getNodo())
         return nodo
