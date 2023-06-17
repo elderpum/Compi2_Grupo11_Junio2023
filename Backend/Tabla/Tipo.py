@@ -7,8 +7,9 @@ class Tipos(Enum):
     BOOLEAN = 'BOOLEAN'
     STRING = 'STRING'
     ANY = 'ANY'
-    ARREGLO = 'ARREGLO'
+    ARRAY = 'ARRAY'
     STRUCT = 'STRUCT'
+    OBJECT = 'OBJECT'
     FUNCTION = 'FUNCTION'
 
 class Aritmeticos(Enum):

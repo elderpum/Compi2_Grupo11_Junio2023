@@ -9,21 +9,21 @@ from ..Tabla.Errores import Error
 
 class Variable(Instruccion):
 
-    def __init__(self, id, fila, columna, id2=None, posiciones = None):
-        super().__init__(Tipos.NOTHING, fila, columna)
-        self.id = id
-        self.id2= id2
-        self.posiciones = posiciones
+    def __init__(self, id1_, fila_, columna_, id2_=None, posiciones_ = None):
+        super().__init__(Tipos.NOTHING, fila_, columna_)
+        self.id1 = id1_
+        self.id2= id2_
+        self.posiciones = posiciones_
 
-    def Ejecutar(self, arbol: Arbol, tabla: TablaSimbolo):
+    def Ejecutar(self, arbol_: Arbol, tabla_: TablaSimbolo):
         if self.id2 == None:
-            variable = tabla.getVariable(self.id)
+            variable = tabla_.getVariable(self.id)
             if variable is not None:
                 self.tipo = variable.getTipo()
                 if self.tipo == Tipos.ARRAY:
                     if self.posiciones is not None:
                         try:
-                            val = self.getArray(variable.getValor(), arbol, tabla)
+                            val = self.getArray(variable.getValor(), arbol_, tabla_)
                             if isinstance(val, Error): return val
                             if isinstance(val, Simbolo):
                                 self.tipo = val.getTipo()
@@ -42,7 +42,7 @@ class Variable(Instruccion):
             else:
                 return Error("Semantico", "La variable indicada no existe", self.fila, self.columna)
         else:       
-            variable = self.id.Ejecutar(arbol, tabla)
+            variable = self.id.Ejecutar(arbol_, tabla_)
             if isinstance(variable, Error):return variable
             self.tipo = self.id.tipo
             if self.tipo!=Tipos.OBJECT:
@@ -53,7 +53,7 @@ class Variable(Instruccion):
                 if self.posiciones == None:
                     return get[0]
                 else:
-                    ress = self.getArray(get[0], arbol, tabla)
+                    ress = self.getArray(get[0], arbol_, tabla_)
                     if isinstance(ress, Error): return ress
                     if isinstance(ress, Simbolo):
                         self.tipo = ress.getTipo()
@@ -76,9 +76,6 @@ class Variable(Instruccion):
                 if res < 0:
                     return Error("Sintactico","Posición de Array fuera de rango",self.fila, self.columna)
                 data = data[res]
-            if posicion.tipo == Tipos.RANGE:
-                data = self.clonarSimbolos(data, res[0], res[1])
-                if isinstance(data, Error): return data
         return data
         
     def clonarSimbolos(self, array, izquierda, derecha):
@@ -101,7 +98,7 @@ class Variable(Instruccion):
               
             
     
-    def getNodo(self) -> NodoAST:
+    def getNodo(self) -> NodeAST:
         nodo = NodeAST('VARIABLE')
         id = NodeAST("ID")
         if self.id2 == None:
