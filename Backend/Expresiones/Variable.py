@@ -70,7 +70,8 @@ class Variable(Instruccion):
             res = posicion.Ejecutar(arbol, tabla)
             if isinstance(res, Error):return res
             if posicion.tipo != Tipos.ENTERO and posicion.tipo!= Tipos.RANGE:
-                return Error("Sintactico","La posición del array debe ser un Int64 o un rango", self.fila, self.columna)
+                return Error("Sintactico","La posición del array debe ser un numero", self.fila, self.columna)
+            
             if posicion.tipo == Tipos.ENTERO:
                 res-=1
                 if res < 0:
