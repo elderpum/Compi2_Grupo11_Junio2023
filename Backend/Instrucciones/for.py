@@ -1,4 +1,7 @@
+
 from ..Abstracto.instruccion import Instruccion
+from ..Tabla.Simbolo import Simbolo
+from ..Tabla.Nodo_list import Node_list
 from ..Tabla.NodeAST import NodeAST
 from ..Tabla.Arbol import Arbol
 from ..Tabla.Tabla_simbolos import TablaSimbolo
@@ -10,19 +13,19 @@ from .return_ import RETURN
 
 class FOR(Instruccion):
 
-    def __init__(self, id, expresion, instruciones,fila, columna):
-        super().__init__(Tipos.ANY, fila, columna)
-        self.id = id
-        self.expresion = expresion
-        self.instruciones = instruciones
+    def __init__(self, id_, expresion_, instruciones_,fila_, columna_):
+        super().__init__(Tipos.ANY, fila_, columna_)
+        self.id = id_
+        self.expresion = expresion_
+        self.instruciones = instruciones_
 
-    def Ejecutar(self, arbol: Arbol, tabla: Tabla_Simbolo):
-        variable = tabla.getVariable(self.id)
-        arbol.PilaCiclo.append("FOR")
+    def Ejecutar(self, arbol_: Arbol, tabla_: TablaSimbolo):
+        variable = tabla_.getVariable(self.id)
+        arbol_.PilaCiclo.append("FOR")
         tip = None
-        ciclo = self.expresion.Ejecutar(arbol, tabla)
+        ciclo = self.expresion.Ejecutar(arbol_, tabla_)
         if isinstance(ciclo, Error): 
-            arbol.PilaCiclo.pop()
+            arbol_.PilaCiclo.pop()
             return ciclo
         if self.expresion.tipo == Tipos.STRING:
             tip = Tipos.STRING
@@ -31,27 +34,17 @@ class FOR(Instruccion):
             data = ciclo
         elif self.expresion.tipo == Tipos.RANGE:
             if ciclo[0] == None:
-                arbol.PilaCiclo.pop()
-                return Error("Sintactico","Rango no recorrible por el ciclo for", self.fila, self.columna)
+                arbol_.PilaCiclo.pop()
+                return Error("Sintactico","Rango no invalido para el ciclo for", self.fila, self.columna)
             inicial = ciclo[0]
             final = ciclo[1]
             distancia = final-inicial
-            tip = Tipos.ENTERO
-            if type(inicial) == type(2.1) or type(final) == type(2.1):
-                tip = Tipos.FLOAT
-            data = range(0,int(distancia)+1)
-        elif self.expresion.tipo == Tipos.ENTERO or self.expresion.tipo == Tipos.FLOAT:
-            inicial = ciclo
-            final = ciclo
-            distancia = final-inicial
-            tip = Tipos.ENTERO
-            if type(inicial) == type(2.1) or type(final) == type(2.1):
-                tip = Tipos.FLOAT
-            self.expresion.tipo = Tipos.RANGE
-            data = range(0,int(distancia)+1)
-            
+            tip = Tipos.NUMBER
+            if type(inicial) == type(0.1) or type(final) == type(0.1):
+                tip = Tipos.NUMBER
+            data = range(0,int(distancia)+1)            
         else:
-            arbol.PilaCiclo.pop()
+            arbol_.PilaCiclo.pop()
             return Error("Semantico","El for no puede efectuarse con el tipo "+str(self.expresion.tipo.value), self.fila, self.columna)
         evaluado = False
         for a in data:
@@ -68,35 +61,34 @@ class FOR(Instruccion):
                     variable.setValor(a)
             else:
                 variable.setValor(a)
-            nuevaTabla = Tabla_Simbolo(tabla, "FOR")
-            nuevaTabla.funcion = tabla.funcion
-            arbol.Lista_Simbolo.Agregar(Lista_Simbolo(self.id, variable.getTipo(), nuevaTabla.Entorno, self.fila, self.columna))
+            nuevaTabla = TablaSimbolo(tabla_, "FOR")
+            nuevaTabla.funcion = tabla_.funcion
+            arbol_.Lista_Simbolo.Agregar(Node_list(self.id, variable.getTipo(), nuevaTabla.Entorno, self.fila, self.columna))
             nuevaTabla.setVariable(variable)
             for ins in self.instruciones:
-                res = ins.Ejecutar(arbol, nuevaTabla)
+                res = ins.Ejecutar(arbol_, nuevaTabla)
                 if isinstance(res, Error) and not evaluado:
-                    arbol.errores.append(res)
+                    arbol_.errores.append(res)
                 elif isinstance(res, RETURN):
-                    arbol.PilaCiclo.pop()
+                    arbol_.PilaCiclo.pop()
                     return res
                 elif isinstance(res, BREAK):
-                    arbol.PilaCiclo.pop()
+                    arbol_.PilaCiclo.pop()
                     return True
                 elif isinstance(res, CONTINUE):
                     break
             evaluado = True
-        arbol.PilaCiclo.pop()
+        arbol_.PilaCiclo.pop()
         
         return True
         
-    def getNodo(self) -> NodoAST:
-        nodo = NodoAST('FOR')
-        nodo.agregarHijo(self.id)
-        nodo.agregarHijoNodo(self.expresion.getNodo())
-        inst = NodoAST('INSTRUCCIONES')
-        for ins in self.instruciones:
-            insts = NodoAST("INSTRUCCION")
-            insts.agregarHijoNodo(ins.getNodo())
-            inst.agregarHijoNodo(insts)
-        nodo.agregarHijoNodo(inst)
-        return nodo
+def getNodo(self) -> NodeAST:
+    nodo = NodeAST('FOR')
+    nodo.addHijoNodo(self.expresion.getNodo())
+    inst = NodeAST('INSTRUCCIONES')
+    for ins in self.instruciones:
+        instr = NodeAST("INSTRUCCION")
+        instr.addHijoNodo(ins.getNodo())
+        inst.addHijoNodo(instr)
+    nodo.addHijoNodo(inst)
+    return nodo

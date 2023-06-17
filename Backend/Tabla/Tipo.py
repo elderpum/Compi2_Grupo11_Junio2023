@@ -10,6 +10,7 @@ class Tipos(Enum):
     ARRAY = 'ARRAY'
     STRUCT = 'STRUCT'
     OBJECT = 'OBJECT'
+    RANGE = 'RANGE'
     FUNCTION = 'FUNCTION'
 
 class Aritmeticos(Enum):
