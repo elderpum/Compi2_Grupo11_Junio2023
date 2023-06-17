@@ -6,13 +6,13 @@ class List_Simbolo(object):
     def __init__(self):
         self.Lista = {}
 
-    def Agregar(self, simbolo: Node_list):
+    def Agregar(self, simbolo_: Node_list):
         try:
-            self.Lista[simbolo.nombre +"-"+ simbolo.ambito]
-            self.Lista[simbolo.nombre +"-"+ simbolo.ambito] = simbolo
+            self.Lista[simbolo_.nombre +"-"+ simbolo_.ambito]
+            self.Lista[simbolo_.nombre +"-"+ simbolo_.ambito] = simbolo
         except:
-            simbolo.numero = len(self.Lista)+1
-            self.Lista[simbolo.nombre +"-"+ simbolo.ambito] = simbolo
+            simbolo_.numero = len(self.Lista)+1
+            self.Lista[simbolo_.nombre +"-"+ simbolo_.ambito] = simbolo
         return
     
     def getLista(self):

@@ -1,25 +1,25 @@
-from ..GENERAL.Lista_Simbolo import Lista_Simbolo
-from ..ABSTRACT.instruccion import Instruccion
-from ..ABSTRACT.NodoAST import NodoAST
-from ..GENERAL.Arbol import Arbol
-from ..GENERAL.Tabla_Simbolo import Tabla_Simbolo
-from ..GENERAL.Simbolo import Simbolo
-from ..GENERAL.Tipo import Tipos
-from ..GENERAL.error import Error
+from ..Tabla.Nodo_list import Node_list
+from ..Abstracto.instruccion import Instruccion
+from ..Tabla.NodeAST import NodeAST
+from ..Tabla.Arbol import Arbol
+from ..Tabla.Tabla_simbolos import TablaSimbolo
+from ..Tabla.Simbolo import Simbolo
+from ..Tabla.Tipo import Tipos
+from ..Tabla.Errores import Error
 
 class Asignacion(Instruccion):
 
-    def __init__(self, tipo, fila, columna, expresion, id, id2=None, Posicion=None):
-        super().__init__(tipo, fila, columna)
-        self.expresion = expresion
-        self.id = id
-        self.id2 = id2
-        self.Posiciones = Posicion
-        self.ultimo = Tipos.ENTERO
+    def __init__(self, tipo_, fila_, columna_, expresion_, id1_, id2_=None, Posicion_=None):
+        super().__init__(tipo_, fila_, columna_)
+        self.expresion = expresion_
+        self.id = id1_
+        self.id2 = id2_
+        self.Posiciones = Posicion_
+        self.ultimo = Tipos.NUMBER
 
-    def Ejecutar(self, arbol: Arbol, tabla: Tabla_Simbolo):
-        variable = tabla.getVariable(self.id, tabla.funcion)
-        content = self.expresion.Ejecutar(arbol, tabla)
+    def Ejecutar(self, arbol_: Arbol, tabla_: TablaSimbolo):
+        variable = tabla_.getVariable(self.id, tabla_.funcion)
+        content = self.expresion.Ejecutar(arbol_, tabla_)
         if self.id2==None:
             if isinstance(content, Error): return content
             if self.tipo is not None and self.tipo != self.expresion.tipo:
@@ -27,9 +27,9 @@ class Asignacion(Instruccion):
             if variable is None:
                 if self.Posiciones is not None:
                     return Error("Sintactico","La variable indicada no existe", self.fila, self.columna)
-                arbol.Lista_Simbolo.Agregar(Lista_Simbolo(self.id, self.expresion.tipo.value, tabla.Entorno, self.fila, self.columna))
+                arbol_.Lista_Simbolo.Agregar(Node_list(self.id, self.expresion.tipo.value, tabla_.Entorno, self.fila, self.columna))
                 nuevoSimbolo = Simbolo(content, self.expresion.tipo, self.id, self.fila, self.columna)
-                tabla.setVariable(nuevoSimbolo)
+                tabla_.setVariable(nuevoSimbolo)
                 return content
             else:
                 if self.Posiciones is not None:
@@ -47,7 +47,7 @@ class Asignacion(Instruccion):
                     return Error("Sintactico","No se puede modificar un tipo Struct", self.fila, self.columna)
                 if variable.getTipo() == Tipos.FUNCTION:
                     return Error("Sintactico","No se puede modificar un tipo FUNCTION", self.fila, self.columna)
-                arbol.Lista_Simbolo.Agregar(Lista_Simbolo(self.id, self.expresion.tipo.value, tabla.Entorno, self.fila, self.columna))
+                arbol_.Lista_Simbolo.Agregar(Node_list(self.id, self.expresion.tipo.value, tabla.Entorno, self.fila, self.columna))
                 variable.setValor(content)
                 variable.setTipo(self.expresion.tipo)
                 return content
@@ -87,7 +87,7 @@ class Asignacion(Instruccion):
                             get = get[id2[0]]
                         if id2[1] is not None:
                             if a < len(self.id2):
-                                ar = self.getArrayNode(id2[1], arbol, tabla)
+                                ar = self.getArrayNode(id2[1], arbol_, tabla_)
                                 if isinstance(ar, Error): return ar
                                 try:
                                     va = eval(f'get{ar}')
@@ -101,11 +101,11 @@ class Asignacion(Instruccion):
                                     return Error("Sintactico", "Posición fuera de rango", self.fila, self.columna)
                             else:
                                 try:
-                                    ar = self.getArrayNode(id2[1], arbol, tabla)
+                                    ar = self.getArrayNode(id2[1], arbol_, tabla_)
                                     va = eval(f'get[0]{ar}')
                                     if isinstance(va, Simbolo):
                                         if self.expresion.tipo == Tipos.ARRAY:
-                                            arr = self.cambioArray(id2[1], get[0], arbol, tabla, len(id2[1]), 0, content)
+                                            arr = self.cambioArray(id2[1], get[0], arbol_, tabla_, len(id2[1]), 0, content)
                                             if isinstance(arr, Error): return arr
                                             get[0] = arr
                                         else:
@@ -113,7 +113,7 @@ class Asignacion(Instruccion):
                                         va.setTipo(self.expresion.tipo) 
                                         get = [va, va.getTipo(), get[2]]
                                     else:
-                                        arr = self.cambioArray(id2[1], get[0], arbol, tabla, len(id2[1]), 0, content)
+                                        arr = self.cambioArray(id2[1], get[0], arbol_, tabla_, len(id2[1]), 0, content)
                                         if isinstance(arr, Error): return arr
                                         get[0] = arr
                                         
@@ -143,9 +143,9 @@ class Asignacion(Instruccion):
             ar +="["
             res = posicion.Ejecutar(arbol, tabla)
             if isinstance(res, Error):return res
-            if posicion.tipo != Tipos.ENTERO and posicion.tipo!= Tipos.RANGE:
-                return Error("Sintactico","La posición del array debe ser un Int64 o un rango", self.fila, self.columna)
-            if posicion.tipo == Tipos.ENTERO:
+            if posicion.tipo != Tipos.NUMBER and posicion.tipo!= Tipos.RANGE:
+                return Error("Sintactico","La posición del array debe ser un number", self.fila, self.columna)
+            if posicion.tipo == Tipos.NUMBER:
                 res-=1
                 if res < 0:
                     return Error("Sintactico","Posición de Array fuera de rango",self.fila, self.columna)
@@ -158,9 +158,9 @@ class Asignacion(Instruccion):
             posicion = list[pos]
             res = posicion.Ejecutar(arbol, tabla)
             if isinstance(res, Error): return res
-            if posicion.tipo != Tipos.ENTERO and posicion.tipo!= Tipos.RANGE:
+            if posicion.tipo != Tipos.NUMBER and posicion.tipo!= Tipos.RANGE:
                 return Error("Sintactico","La posición del array debe ser un Int64 o un rango", self.fila, self.columna)
-            if posicion.tipo == Tipos.ENTERO:
+            if posicion.tipo == Tipos.NUMBER:
                 res-=1
                 if res < 0:
                     return Error("Sintactico","Posición de Array fuera de rango",self.fila, self.columna)
@@ -183,10 +183,10 @@ class Asignacion(Instruccion):
             posicion = list[pos]
             res = posicion.Ejecutar(arbol, tabla)
             if isinstance(res, Error): return res
-            if posicion.tipo != Tipos.ENTERO and posicion.tipo!= Tipos.RANGE:
+            if posicion.tipo != Tipos.NUMBER and posicion.tipo!= Tipos.RANGE:
                 return Error("Sintactico","La posición del array debe ser un Int64 o un rango", self.fila, self.columna)
-            if posicion.tipo == Tipos.ENTERO:
-                self.ultimo = Tipos.ENTERO
+            if posicion.tipo == Tipos.NUMBER:
+                self.ultimo = Tipos.NUMBER
                 n=res-1
                 if n < 0:
                     return Error("Sintactico","Posición de Array fuera de rango",self.fila, self.columna)
@@ -227,55 +227,55 @@ class Asignacion(Instruccion):
     
     
         
-    def getNodo(self) -> NodoAST:
-        nodo = NodoAST('ASIGNACION')
-        id = NodoAST("ID")
-        id.agregarHijo(self.id)
+    def getNodo(self) -> NodeAST:
+        nodo = NodeAST('ASIGNACION')
+        id = NodeAST("ID")
+        id.addHijo(self.id)
         if self.Posiciones is not None:
             anterior_pos = None
             nodo_posicion = None
             for posicion in self.Posiciones:
-                nodo_posicion = NodoAST("LISTA_ARRAY")
+                nodo_posicion = NodeAST("LISTA_ARRAY")
                 if anterior_pos is not None:
-                    nodo_posicion.agregarHijoNodo(anterior_pos)
-                nodo_posicion.agregarHijo("[")
-                nodo_posicion.agregarHijoNodo(posicion.getNodo())
-                nodo_posicion.agregarHijo("]")
+                    nodo_posicion.addHijoNodo(anterior_pos)
+                nodo_posicion.addHijo("[")
+                nodo_posicion.addHijoNodo(posicion.getNodo())
+                nodo_posicion.addHijo("]")
                 anterior_pos = nodo_posicion
-            id.agregarHijoNodo(nodo_posicion)
-        nodo.agregarHijoNodo(id)
+            id.addHijoNodo(nodo_posicion)
+        nodo.addHijoNodo(id)
         if self.id2 is not None:
             id = None
             anterior = None
             for id2 in self.id2:
-                id = NodoAST("LISTA_ID")
-                idd = NodoAST("ID")
+                id = NodeAST("LISTA_ID")
+                idd = NodeAST("ID")
                 if anterior is not None:
-                    id.agregarHijoNodo(anterior)
+                    id.addHijoNodo(anterior)
                 
-                id.agregarHijo(".")
-                idd.agregarHijo(id2[0])
-                id.agregarHijoNodo(idd)
+                id.addHijo(".")
+                idd.addHijo(id2[0])
+                id.addHijoNodo(idd)
                 if id2[1] is not None:
                     nodo_arr = None
                     anterior_arr = None
                     for arr in id2[1]:
-                        nodo_arr = NodoAST("LISTA_ARRAY")
+                        nodo_arr = NodeAST("LISTA_ARRAY")
                         if anterior_arr is not None:
-                            nodo_arr.agregarHijoNodo(anterior_arr)
-                        nodo_arr.agregarHijo("[")
-                        nodo_arr.agregarHijoNodo(arr.getNodo())
-                        nodo_arr.agregarHijo("]")
+                            nodo_arr.addHijoNodo(anterior_arr)
+                        nodo_arr.addHijo("[")
+                        nodo_arr.addHijoNodo(arr.getNodo())
+                        nodo_arr.addHijo("]")
                         anterior_arr = nodo_arr
-                    id.agregarHijoNodo(nodo_arr)
+                    id.addHijoNodo(nodo_arr)
                 
                 anterior = id
-            nodo.agregarHijoNodo(id)
+            nodo.addHijoNodo(id)
         else:
             pass
-        nodo.agregarHijo('=')
-        nodo.agregarHijoNodo(self.expresion.getNodo())
+        nodo.addHijo('=')
+        nodo.addHijoNodo(self.expresion.getNodo())
         if self.tipo is not None:
-            nodo.agregarHijo('::')
-            nodo.agregarHijo(self.tipo.value)
+            nodo.addHijo('::')
+            nodo.addHijo(self.tipo.value)
         return nodo

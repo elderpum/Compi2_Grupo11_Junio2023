@@ -2,10 +2,10 @@ from .Simbolo import Simbolo
 
 class TablaSimbolo(object):
 
-    def __init__(self, anterior=None, Entorno = ""):
-        self.anterior = anterior
+    def __init__(self, anterior_=None, Entorno_ = ""):
+        self.anterior = anterior_
         self.tabla = {}
-        self.Entorno = Entorno
+        self.Entorno = Entorno_
         self.funcion = False
 
     def setvariable(self, simbolo: Simbolo):
