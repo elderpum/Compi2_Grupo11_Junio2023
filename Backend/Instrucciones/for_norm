@@ -40,7 +40,7 @@ class ForNorm(Instruccion):
             nuevo_valor = self.contador.Ejecutar(arbol_, nuevaTabla)
             if isinstance(nuevo_valor, Error): return nuevo_valor
             
-            simbolo = Simbolo(self.inicio.id, self.inicio., nuevo_valor, self.fila, self.columna)
+            simbolo = Simbolo(self.inicio.id, self.inicio, nuevo_valor, self.fila, self.columna)
 
             # Actualizando el valor de la variable en la tabla de simbolos
             valor = nuevaTabla.updateTabla(simbolo)
