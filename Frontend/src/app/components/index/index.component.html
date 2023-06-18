@@ -110,7 +110,7 @@
 </dx-popup>
 
 <nav class="navbar navbar-dark navbar-expand-lg navbar-light m-0" style="background-color: #263238;">
-  <a class="navbar-brand" href="#">JOLC</a>
+  <a class="navbar-brand" href="#">PyTypeCraft</a>
   <ul class="navbar-nav">
     <li class="nav-item {{ HomeActive.isActive ? 'active': '' }}">
       <a class="nav-link" routerLinkActive="active" #HomeActive="routerLinkActive" routerLink="/Home">Home <span class="sr-only">(current)</span></a>
@@ -133,7 +133,7 @@
             id="upload"
             name="tySubida"
             style="display: none"
-            accept="application,.jl"
+            accept="application,.ts,.go"
             (input)="upload($event)"
           />
         </div>
