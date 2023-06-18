@@ -16,6 +16,7 @@ reserved = {
     'tosting'       :   'RTOSTRING',
     'split'         :   'RSPLIT',
     'concat'        :   'RCONCAT',
+    'null'          :   'RNULL',
     'any'           :   'RANY',
     'number'        :   'RNUMBER',
     'boolean'       :   'RBOOL',
@@ -24,8 +25,10 @@ reserved = {
     'console'       :   'RCONSOLE',
     'log'           :   'RLOG',
     'interface'     :   'RINTERFACE',
+    'void'          :   'RVOID',
     'function'      :   'RFUNCTION',
     'for'           :   'RFOR',
+    'of'            :   'ROF',
     'while'         :   'RWHILE',
     'break'         :   'RBREAK',
     'continue'      :   'RCONTINUE',
@@ -33,6 +36,11 @@ reserved = {
     'if'            :   'RIF',
     'else'          :   'RELSE',
     'elseif'        :   'RELSEIF',
+    'push'          :   'RPUSH',
+    'pop'           :   'RPOP',
+    'length'        :   'RLENGTH',
+
+
 }
 
 tokens = [

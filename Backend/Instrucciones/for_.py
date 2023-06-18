@@ -1,4 +1,3 @@
-
 from ..Abstracto.instruccion import Instruccion
 from ..Tabla.Simbolo import Simbolo
 from ..Tabla.Nodo_list import Node_list
