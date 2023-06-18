@@ -16,6 +16,7 @@ reserved = {
     'tosting'       :   'RTOSTRING',
     'split'         :   'RSPLIT',
     'concat'        :   'RCONCAT',
+    'any'           :   'RANY',
     'number'        :   'RNUMBER',
     'boolean'       :   'RBOOL',
     'true'          :   'RTRUE',
