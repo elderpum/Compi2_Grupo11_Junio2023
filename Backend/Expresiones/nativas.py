@@ -55,14 +55,7 @@ class Nativa(Instruccion):
                 
     def getNodo(self) -> NodeAST:
         nodo = NodeAST('NATIVA')
-        if self.Nativa == Tipos_Nativa.LOG:
-            nodo.agregarHijo(self.Nativa.value)
-            nodo.agregarHijo('(')
-            nodo.agregarHijoNodo(self.expresion.getNodo())
-            nodo.agregarHijo(',')
-            nodo.agregarHijoNodo(self.valor2.getNodo())
-            nodo.agregarHijo(')')
-        elif self.valor2 is not None:
+        if self.valor2 is not None:
             nodo.agregarHijo(self.Nativa.value)
             nodo.agregarHijo('(')
             nodo.agregarHijo(self.expresion.value)

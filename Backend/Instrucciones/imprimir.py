@@ -36,7 +36,7 @@ class Imprimir(Instruccion):
             
             tamaño+=1
 
-        arbol_.updateConsola(valor)
+        arbol_.updateConsola(valor+"\n")
     
     def getStruct(self, val, struct):
         val += struct[1] + "("

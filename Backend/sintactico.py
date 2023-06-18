@@ -1,5 +1,22 @@
 import ply.yacc as yacc
-from lexico import tokens,lexer,errores,find_column
+from lexico import  tokens, lexer, errores, reserved
+from .Abstracto.instruccion import Instruccion
+from Expresiones.Aritmeticas import Aritmetica
+from Expresiones.logicas import Logicas
+from Expresiones.callfunct import LLAMADA_EXP
+from Expresiones.nativas import Nativa
+from Expresiones.Variable import Variable
+from Instrucciones.Asignacion import Asignacion
+from Instrucciones.break_ import BREAK
+from Instrucciones.continue_ import CONTINUE
+from Instrucciones.elseif import ELSEIF
+from Instrucciones.for_ import FOR
+from Instrucciones.Funciones import FUNCION
+from Instrucciones.If_ import IF
+from Instrucciones.imprimir import Imprimir
+from Instrucciones.return_ import RETURN
+from Instrucciones.while_ import WHILE
+from Tabla.Tipo import Tipos
 
 
 precedence = (
@@ -32,106 +49,52 @@ def p_instrucciones_ins(t):
         t[0] = [t[1]]
 
 def p_instruccion(t):
-    '''instruccion  : print ptcoma
-                    | println ptcoma
-                    | asignacion ptcoma
-                    | condicional r_end ptcoma
-                    | whilee r_end ptcoma
-                    | forr r_end ptcoma
-                    | struct ptcoma
-                    | funtionn r_end ptcoma
-                    | llamada ptcoma
-                    | array ptcoma
-                    | BREAKk ptcoma
-                    | RETURNN ptcoma
-                    | CONTINUEE ptcoma
-                    | GLOBAL ptcoma
-                    | LOCAL ptcoma
-                    | PUSHH ptcoma
-                    | POPP ptcoma
-                    | LENGHTT ptcoma'''
+    '''instruccion  : imprimir PUNTOCOMA
+                    | asignacion PUNTOCOMA
+                    | condicional r_end PUNTOCOMA
+                    | whilee r_end PUNTOCOMA
+                    | forr r_end PUNTOCOMA
+                    | struct PUNTOCOMA
+                    | funtionn r_end PUNTOCOMA
+                    | llamada PUNTOCOMA
+                    | BREAKk PUNTOCOMA
+                    | RETURNN PUNTOCOMA
+                    | CONTINUEE PUNTOCOMA'''
     t[0] = t[1]
 
-#push, pop, lenght
-
-def p_pushh(t):
-    '''PUSHH : r_push not pizq expresion coma expresion pder'''
-    t[0] = PUSH(t[4], t[6], t.lineno(1), col(t.slice[1]))
-
-def p_popp(t):
-    '''POPP : r_pop not pizq expresion pder'''
-    t[0] = POP(t[4], t.lineno(1), col(t.slice[1]))
-    
-def p_lengthh(t):
-    '''LENGHTT : r_length pizq expresion pder'''
-    t[0] = LENGHT(t[3], t.lineno(1), col(t.slice[1]))
-
-#Global y Local
-def p_global(t):
-    '''GLOBAL : r_global id'''
-    t[0] = GLOBAL(t[2], t.lineno(1), col(t.slice[2]))
-
-def p_global_exp(t):
-    '''GLOBAL : r_global id igualT expresion'''
-    t[0] = GLOBAL(t[2], t.lineno(1), col(t.slice[2]), t[4])
-
-def p_global_tipo(t):
-    '''GLOBAL : r_global id igualT expresion dospuntos dospuntos tipo'''
-    t[0] = GLOBAL(t[2], t.lineno(1), col(t.slice[2]), t[4], t[7])
-
-def p_global_tipo_id(t):
-    '''GLOBAL : r_global id igualT expresion dospuntos dospuntos id'''
-    t[0] = GLOBAL(t[2], t.lineno(1), col(t.slice[2]), t[4], Tipos.OBJECT)
-
-def p_local(t):
-    '''LOCAL : r_local id'''
-    t[0] = LOCAL(t[2], t.lineno(1), col(t.slice[2]))
-    
-def p_local_exp(t):
-    '''LOCAL : r_local id igualT expresion'''
-    t[0] = LOCAL(t[2], t.lineno(1), col(t.slice[2]), t[4])
-
-def p_local_tipo(t):
-    '''LOCAL : r_local id igualT expresion dospuntos dospuntos tipo'''
-    t[0] = LOCAL(t[2], t.lineno(1), col(t.slice[2]),t[7])
-    
-def p_local_tipo_id(t):
-    '''LOCAL : r_local id igualT expresion dospuntos dospuntos id'''
-    t[0] = LOCAL(t[2], t.lineno(1), col(t.slice[2]),Tipos.OBJECT)
-    
 # Condicionales
 def p_condicional_else(t):
-    'condicional    : if r_else instrucciones'
-    t[0] = CONDICION(t[1], t.lineno(1), col(t.slice[2]), t[3])
+    'condicional    : if RELSE instrucciones'
+    t[0] = IF(t[1], t.lineno(1), col(t.slice[2]), t[3])
 
 def p_condicional(t):
     'condicional    : if'
     t[0] = t[1]
  
 def p_break(t):
-    '''BREAKk : r_break'''
+    '''BREAKk : RBREAK'''
     t[0] = BREAK(t.lineno(1), col(t.slice[1])) 
 
 def p_continue(t):
-    '''CONTINUEE : r_continue'''
+    '''CONTINUEE : RCONTINUE'''
     t[0] = CONTINUE(t.lineno(1), col(t.slice[1])) 
 
 def p_return(t):
-    '''RETURNN : r_return'''
+    '''RETURNN : RRETURN'''
     t[0] = RETURN(t.lineno(1), col(t.slice[1])) 
 
 def p_return_expresion(t):
-    '''RETURNN : r_return expresion'''
+    '''RETURNN : RRETURN expresion'''
     t[0] = RETURN(t.lineno(1), col(t.slice[1]), t[2])
 
   
 def p_if(t):
-    'if : r_if expresion instrucciones'
-    t[0] = IF(t[2], t[3], t.lineno(1), col(t.slice[1]))
+    'if : RIF expresion instrucciones'
+    t[0] = ELSEIF(t[2], t[3], t.lineno(1), col(t.slice[1]))
     
 def p_if_elseif(t):
-    'if : if r_elseif expresion instrucciones'
-    t[0] = IF(t[3], t[4], t.lineno(1), col(t.slice[2]), t[1])
+    'if : if RELSEIF expresion instrucciones'
+    t[0] = ELSEIF(t[3], t[4], t.lineno(1), col(t.slice[2]), t[1])
 
 
 
@@ -303,20 +266,13 @@ def p_parametro_struct_id(t):
 #impresiones
 ##impresiones
 def p_print(t):
-    'print  : r_print pizq parametro_print pder'
+    'imprimir  : RCONSOLE PUNTO RLOG pizq parametro_print pder'
     t[0] = Imprimir(t[3], t.lineno(1), col(t.slice[1]))
     
-def p_println(t):
-    'println  : r_println pizq parametro_print pder'
-    t[0] = ImprimirEnter(t[3], t.lineno(1), col(t.slice[1]))
-
 def p_print_v(t):
     'print  : r_print pizq pder'
     t[0] = Imprimir([], t.lineno(1), col(t.slice[1]))
     
-def p_println_v(t):
-    'println  : r_println pizq pder'
-    t[0] = ImprimirEnter([], t.lineno(1), col(t.slice[1]))
 
 def p_parametro_print(t):
     'parametro_print  : parametro_print coma expresion'
@@ -531,14 +487,14 @@ def p_error(p):
         print("Syntax error at EOF")
 
 
-from .PLY import yacc
+from ply import yacc
 parser = yacc.yacc()
 
 
 input = ''
 
 def get_errors():
-    return errors
+    return errores
 
 
 def parse(i):

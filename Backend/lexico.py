@@ -1,5 +1,6 @@
 import re
 import ply.lex as lex
+from sintactico import parse
 
 
 errores = []
@@ -139,6 +140,9 @@ def t_error(t):
 def find_column(inp, tk):
     line_start = inp.rfind('\n', 0, tk.lexpos) + 1
     return (tk.lexpos - line_start) + 1
+
+def col(token):
+    return (token.lexpos - (to_parse.rfind('\n', 0, token.lexpos) + 1)) + 1
 
 
 lexer = lex.lex(reflags = re.IGNORECASE)

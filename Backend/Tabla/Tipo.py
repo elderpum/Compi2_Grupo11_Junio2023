@@ -29,6 +29,8 @@ class Nativas(Enum):
     UPPERCASE = 'UPPERCASE'
     SPLIT = 'SPLIT'
     CONCAT = 'CONCAT'
+    STRING = 'STRING'
+    
 
 class Relacionales(Enum):
     MAYOR = '>'
