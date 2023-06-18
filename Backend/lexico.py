@@ -1,6 +1,6 @@
 import re
 import ply.lex as lex
-from sintactico import parse
+from sintactico import to_parse
 
 
 errores = []

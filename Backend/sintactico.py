@@ -1,5 +1,6 @@
 import ply.yacc as yacc
 from lexico import  tokens, lexer, errores, reserved
+from lexico import col
 from .Abstracto.instruccion import Instruccion
 from Expresiones.Aritmeticas import Aritmetica
 from Expresiones.logicas import Logicas
@@ -17,6 +18,7 @@ from Instrucciones.imprimir import Imprimir
 from Instrucciones.return_ import RETURN
 from Instrucciones.while_ import WHILE
 from Tabla.Tipo import Tipos
+from Tabla.Errores import Error
 
 
 precedence = (
@@ -479,7 +481,7 @@ def p_agrupacion_expresion(t):
 ###################################
 def p_error(p):
     if p:
-        errors.append(Error('Syntax',
+        errores.append(Error('Syntax',
                    f'error at token {p.value}', p.lineno,  col(p)))
         print(f'Syntax error at token {p.value}', p.lineno, p.lexpos)
         parser.errok()
