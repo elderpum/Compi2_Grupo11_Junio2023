@@ -83,11 +83,15 @@ class FOR(Instruccion):
         
 def getNodo(self) -> NodeAST:
     nodo = NodeAST('FOR')
+    nodo.addHijo('(')
     nodo.addHijoNodo(self.expresion.getNodo())
+    nodo.addHijo(')')
     inst = NodeAST('INSTRUCCIONES')
     for ins in self.instruciones:
         instr = NodeAST("INSTRUCCION")
         instr.addHijoNodo(ins.getNodo())
         inst.addHijoNodo(instr)
     nodo.addHijoNodo(inst)
+    nodo.addHijo('}')
+    
     return nodo

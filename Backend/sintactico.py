@@ -25,6 +25,8 @@ from Instrucciones.struct_ import STRUCT
 from Tabla.Tipo import Tipos, Nativas, Aritmeticos, Relacionales, Logicas
 from Tabla.Errores import Error
 
+start = 'init'
+lista = []
 
 precedence = (
     ('left','OR'),
@@ -152,13 +154,12 @@ def p_asignacionTipo_id(t):
 
 #ASIGNACION ARRAY
 def p_asignacion_array_struct(t):
-    '''array : ID number_array lista_id IGUAL expresion'''
     '''array : RLET ID number_array lista_id IGUAL expresion'''
-    t[0] = Asignacion(None, t.lineno(1), col(t.slice[1]),t[5], t[1], t[3], t[2])
+    t[0] = Asignacion(None, t.lineno(1), col(t.slice[1]),t[6], t[2], t[4], t[3])
 
 def p_asignacion_array(t):
     '''array : RLET ID number_array IGUAL expresion'''
-    t[0] = Asignacion(None, t.lineno(1), col(t.slice[1]),t[4], t[1], None, t[2])
+    t[0] = Asignacion(None, t.lineno(1), col(t.slice[1]),t[5], t[2], None, t[3])
     
 #Asignacion STRUCT
 def p_asignacion_STRUCT_variable(t):
@@ -166,19 +167,19 @@ def p_asignacion_STRUCT_variable(t):
     t[0] = Asignacion(None, t.lineno(1), col(t.slice[1]),t[4], t[1], t[2])
 
 def p_lista_id(t):
-    '''lista_id : lista_id PUNTO ID'''
+    '''lista_id : lista_id COMA ID'''
     if t[3] != None:
         t[1].append([t[3], None])
     t[0] = t[1]
     
 def p_lista_id_array(t):
-    '''lista_id : lista_id PUNTO ID number_array'''
+    '''lista_id : lista_id COMA ID number_array'''
     if t[3] != None:
         t[1].append([t[3], t[4]])
     t[0] = t[1]
     
 def p_lista_id_u(t):
-    '''lista_id : PUNTO ID'''
+    '''lista_id : COMA ID'''
     if t[2] == None:
         t[0] = []
     else:
@@ -311,7 +312,7 @@ def p_parametro_print_exp(t):
         t[0] = [t[1]]
 #tipos
 def p_tipo(t):
-    '''tipo : RNUMBER
+    '''tipo : NUMBER
             | RBOOL
             | RSTRING
             | RANY
@@ -437,7 +438,7 @@ def p_expresion_unaria(t):
 
    
 def p_expresion_primitiva_int(t):
-    'expresion    : RNUMBER'
+    'expresion    : NUMBER'
     t[0] = Primitivo(Tipos.NUMBER, t[1], t.lineno(1), col(t.slice[1]))
 
 def p_expresion_primitiva_string(t):
@@ -456,9 +457,9 @@ def p_expresion_primitiva_any(t):
     '''expresion : RANY'''
     t[0] = Primitivo(Tipos.ANY, "any", t.lineno(1), col(t.slice[1]))
 
-# def p_variable(t):
-#     '''expresion : ID'''
-#     t[0] = Variable(t[1], t.lineno(1), col(t.slice[1]))
+def p_variable_id(t):
+     '''expresion : ID'''
+     t[0] = Variable(t[1], t.lineno(1), col(t.slice[1]))
 
 # Definicion de expresiones 
 def p_agrupacion_expresion(t):
@@ -485,9 +486,19 @@ input = ''
 def get_errors():
     return errores
 
+entrada =  ''' 
+let averager = 22;
+'''
 
 def parse(i):
     global to_parse
+    global parser
     to_parse = i
     lexer.lineno = 1
     return parser.parse(i)
+
+import Tabla.Arbol as Arbol
+instru = parse(entrada)
+ast = Arbol(instru)
+ast.ejecutar()
+print(ast.getConsola())

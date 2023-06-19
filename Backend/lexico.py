@@ -1,7 +1,7 @@
 import re
 import ply.lex as lex
 
-to_parse = None
+to_parse = ''
 errores = []
 
 # Lista de palabras reservadas
@@ -18,7 +18,6 @@ reserved = {
     
     'null'          :   'RNULL',
     'any'           :   'RANY',
-    'number'        :   'RNUMBER',
     'boolean'       :   'RBOOL',
     'true'          :   'RTRUE',
     'false'         :   'RFALSE',
@@ -70,7 +69,8 @@ tokens = [
     'CORDER',
     'LLAVEIZQ',
     'LLAVEDER',
-    'ID'
+    'ID',
+    'NUMBER'
 ] + list(reserved.values())
 
 #Tokens
@@ -114,14 +114,9 @@ def t_CADENA(t):
     t.value = t.value[1:-1] # quitar comillas
     return t
 
-def t_ENTERO(t):	
-    r'\d+'
+def t_NUMBER(t):	
+    r'\d+(\.\d+)?'
     t.value = int(t.value)
-    return t
-
-def t_DECIMAL(t):
-    r'\d+\.\d+'
-    t.value = float(t.value)
     return t
 
 def t_newline(t):
@@ -143,9 +138,9 @@ t_ignore = ' \t'
 def t_error(t):
     t.lexer.skip(1)
 
-def find_column(inp, tk):
-    line_start = inp.rfind('\n', 0, tk.lexpos) + 1
-    return (tk.lexpos - line_start) + 1
+# def find_column(inp, tk):
+#     line_start = inp.rfind('\n', 0, tk.lexpos) + 1
+#     return (tk.lexpos - line_start) + 1
 
 def col(token):
     return (token.lexpos - (to_parse.rfind('\n', 0, token.lexpos) + 1)) + 1

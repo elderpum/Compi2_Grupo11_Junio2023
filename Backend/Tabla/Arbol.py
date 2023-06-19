@@ -56,21 +56,21 @@ class Arbol(object):
     
         self.grafo = ""
         self.grafo += "digraph G{\n"
-        res = r'\"';
-        self.grafo += "n0[label=\"" +  re.sub(res, '\\\"', raiz_.getValor()) + "\"];\n";
-        self.c = 1;
-        self.recorrerAST("n0",raiz_);
-        self.grafo += "}";
-        return self.grafo;
+        res = r'\"'
+        self.grafo += "n0[label=\"" +  re.sub(res, '\\\"', raiz_.getValor()) + "\"];\n"
+        self.c = 1
+        self.recorrerAST("n0",raiz_)
+        self.grafo += "}"
+        return self.grafo
     
     
     def recorrerAST(self,padre_ , nPadre_):
         for hijo in nPadre_.getHijos():
-            nombreHijo = "n" + str(self.c);
-            res = r'\"'; 
-            self.grafo += nombreHijo + "[label=\"" + re.sub(res, '\\\"', hijo.getValor())+ "\"];\n";
-            self.grafo += padre_ + "->" + nombreHijo + ";\n";
+            nombreHijo = "n" + str(self.c)
+            res = r'\"'
+            self.grafo += nombreHijo + "[label=\"" + re.sub(res, '\\\"', hijo.getValor())+ "\"];\n"
+            self.grafo += padre_ + "->" + nombreHijo + ";\n"
             self.c+=1
-            self.recorrerAST(nombreHijo,hijo);
+            self.recorrerAST(nombreHijo,hijo)
         
     
