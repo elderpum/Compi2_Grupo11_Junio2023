@@ -7,6 +7,12 @@ from Expresiones.logicas import Logicas
 from Expresiones.callfunct import LLAMADA_EXP
 from Expresiones.nativas import Nativa
 from Expresiones.Variable import Variable
+from Expresiones.array_ import ARRAY
+from Expresiones.push_ import PUSH
+from Expresiones.pop_ import POP
+from Expresiones.primitivas import Primitivo
+from Expresiones.relacionales import Relacional
+from Expresiones.lenght_ import LENGHT
 from Instrucciones.Asignacion import Asignacion
 from Instrucciones.break_ import BREAK
 from Instrucciones.continue_ import CONTINUE
@@ -17,6 +23,7 @@ from Instrucciones.If_ import IF
 from Instrucciones.imprimir import Imprimir
 from Instrucciones.return_ import RETURN
 from Instrucciones.while_ import WHILE
+from Instrucciones.struct_ import STRUCT
 from Tabla.Tipo import Tipos, Nativas, Aritmeticos, Relacionales, Logicas
 from Tabla.Errores import Error
 
@@ -421,7 +428,7 @@ def p_expresion(t):
     elif t[2] == '==' or t[2] == '!=' or t[2] == '>' or t[2] == '>=' or t[2] == '<' or t[2] == '<=':
         t[0] = Relacional(Relacionales(t[2]),t.lineno(1), col(t.slice[2]),t[1],t[3])
     elif t[2] == '&&' or t[2] == '||':
-        t[0] = Logica(Logicas(t[2]),t.lineno(1), col(t.slice[2]),t[1],t[3])
+        t[0] = Logicas(Logicas(t[2]),t.lineno(1), col(t.slice[2]),t[1],t[3])
 
 def p_expresion_unaria(t):
     '''expresion    :   resta expresion %prec UMENOS
@@ -429,37 +436,29 @@ def p_expresion_unaria(t):
     if t[1] == '-':
         t[0] = Aritmetica(Aritmeticos(t[1]),t.lineno(1), col(t.slice[1]),t[2])
     else:
-        t[0] = Logica(Logicas(t[1]),t.lineno(1), col(t.slice[1]),t[2])
+        t[0] = Logicas(Logicas(t[1]),t.lineno(1), col(t.slice[1]),t[2])
 
 
    
 def p_expresion_primitiva_int(t):
-    'expresion    : int'
-    t[0] = Primitivo(Tipos.ENTERO, t[1], t.lineno(1), col(t.slice[1]))
-
-def p_expresion_primitiva_float(t):
-    'expresion    : decimal'
-    t[0] = Primitivo(Tipos.FLOAT, t[1], t.lineno(1), col(t.slice[1]))
-
-def p_expresion_primitiva_char(t):
-    'expresion    : char'
-    t[0] = Primitivo(Tipos.CHAR, t[1], t.lineno(1), col(t.slice[1]))
+    'expresion    : RNUMBER'
+    t[0] = Primitivo(Tipos.NUMBER, t[1], t.lineno(1), col(t.slice[1]))
 
 def p_expresion_primitiva_string(t):
-    'expresion    : string'    
+    'expresion    : RSTRING'    
     t[0] = Primitivo(Tipos.STRING, t[1], t.lineno(1), col(t.slice[1]))
 
 def p_expresion_primitiva_bool(t):
-    '''expresion    : r_false
-                    | r_true'''
+    '''expresion    : RFALSE
+                    | RTRUE'''
     if t[1]=='true':
-        t[0] = Primitivo(Tipos.BOOL, True, t.lineno(1), col(t.slice[1]))
+        t[0] = Primitivo(Tipos.BOOLEAN, True, t.lineno(1), col(t.slice[1]))
     else:
-        t[0] = Primitivo(Tipos.BOOL, False, t.lineno(1), col(t.slice[1]))
+        t[0] = Primitivo(Tipos.BOOLEAN, False, t.lineno(1), col(t.slice[1]))
 
 def p_expresion_primitiva_nothing(t):
     '''expresion : r_nothing'''
-    t[0] = Primitivo(Tipos.NOTHING, "nothing", t.lineno(1), col(t.slice[1]))
+    t[0] = Primitivo(Tipos.ANY, "nothing", t.lineno(1), col(t.slice[1]))
 
 # def p_variable(t):
 #     '''expresion : id'''
