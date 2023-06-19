@@ -1,5 +1,5 @@
-from ..Tabla.Tipo import Tipos
-from ..Tabla.Tipo import Aritmeticos
+from Tabla.Simbolo import Tipos
+from Tabla.Tipo import Aritmeticos
 
 Dic_Aritmetica = {
     #SUMA

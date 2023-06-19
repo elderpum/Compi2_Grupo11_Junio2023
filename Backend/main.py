@@ -1,16 +1,26 @@
-# This is a sample Python script.
+from fastapi import APIRouter,FastAPI
+import sintactico as gramatica
+import Tabla.Arbol as Arbol
+import sys
+import uvicorn
 
-# Press Mayús+F10 to execute it or replace it with your code.
-# Press Double Shift to search everywhere for classes, files, tool windows, actions, and settings.
-
-
-def print_hi(name):
-    # Use a breakpoint in the code line below to debug your script.
-    print(f'Hi, {name}')  # Press Ctrl+F8 to toggle the breakpoint.
+app = FastAPI()
 
 
-# Press the green button in the gutter to run the script.
-if __name__ == '__main__':
-    print_hi('PyCharm')
 
-# See PyCharm help at https://www.jetbrains.com/help/pycharm/
+
+@app.post('/Compilar')
+def analysis(req: str):
+    try:
+        sys.setrecursionlimit(100000)
+        h = gramatica.parser(req.Contenido)
+        ast = Arbol(h)
+        ast.ejecutar()
+        gramatica.start = ""
+        return {"consola": ast.getConsola(), "Simbolo": ast.Lista .getLista(), "Errores": ast.errores, "AST": ast.graphAST()}
+    except Exception as e:
+        return {"error": str(e)}
+    
+if __name__ == "__main__":
+    uvicorn.run("main:app", host="localhost", port=6600,
+                reload=True, log_level="info", access_log=False)

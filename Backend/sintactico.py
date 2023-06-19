@@ -1,11 +1,9 @@
 import ply.yacc as yacc
-from lexico import  tokens, lexer, errores, reserved
-from lexico import col
-from .Abstracto.instruccion import Instruccion
+from lexico import to_parse, errores, reserved,lexer,tokens, col
 from Expresiones.Aritmeticas import Aritmetica
 from Expresiones.logicas import Logicas
 from Expresiones.callfunct import LLAMADA_EXP
-from Expresiones.nativas import Nativa
+from Expresiones.nativas import Nativas
 from Expresiones.Variable import Variable
 from Expresiones.array_ import ARRAY
 from Expresiones.push_ import PUSH
@@ -60,7 +58,7 @@ def p_instrucciones_ins(t):
 def p_instruccion(t):
     '''instruccion  : imprimir PUNTOCOMA
                     | asignacion PUNTOCOMA
-                    | array ptcoma
+                    | array PUNTOCOMA
                     | condicional PUNTOCOMA
                     | whilee PUNTOCOMA
                     | forr PUNTOCOMA
@@ -70,9 +68,9 @@ def p_instruccion(t):
                     | BREAKk PUNTOCOMA
                     | RETURNN PUNTOCOMA
                     | CONTINUEE PUNTOCOMA
-                    | PUSHH ptcoma
-                    | POPP ptcoma
-                    | LENGHTT ptcoma
+                    | PUSHH PUNTOCOMA
+                    | POPP PUNTOCOMA
+                    | LENGHTT PUNTOCOMA
                     '''
     t[0] = t[1]
 
@@ -119,11 +117,11 @@ def p_return_expresion(t):
 
   
 def p_if(t):
-    'if_ : RIF PAIZQ expresion PARDER LLAVEIZQ instrucciones LLAVEDER'
+    'if_ : RIF PARIZQ expresion PARDER LLAVEIZQ instrucciones LLAVEDER'
     t[0] = ELSEIF(t[3], t[6], t.lineno(1), col(t.slice[1]))
     
 def p_if_elseif(t):
-    'if_ : if_ RELSEIF PAIZQ expresion PARDER LLAVEIZQ instrucciones LLAVEDER'
+    'if_ : if_ RELSEIF PARIZQ expresion PARDER LLAVEIZQ instrucciones LLAVEDER'
     t[0] = ELSEIF(t[4], t[7], t.lineno(1), col(t.slice[2]), t[1])
 
 #ciclos
@@ -389,11 +387,11 @@ def p_expresion_llamada(t):
 
 
 def p_push_expresion(t):
-    '''expresion : RPUSH not PARIZQ expresion COMA expresion PARDER'''
+    '''expresion : RPUSH NOT PARIZQ expresion COMA expresion PARDER'''
     t[0] = PUSH(t[4], t[6], t.lineno(1), col(t.slice[1]))
 
 def p_pop_expresion(t):
-    '''expresion : RPOP not PARIZQ expresion PARDER'''
+    '''expresion : RPOP NOT PARIZQ expresion PARDER'''
     t[0] = POP(t[4], t.lineno(1), col(t.slice[1]))
     
 def p_length_expresion(t):
@@ -403,6 +401,7 @@ def p_length_expresion(t):
 def p_nativa_individual(t):
     '''expresion    : RTOFIXED PARIZQ expresion PARDER
                     | RTOSTRING PARIZQ expresion PARDER
+                    | RTOEXPONENTIAL PARIZQ expresion PARDER
                     | RTYPEOF PARIZQ expresion PARDER
                     | RTOUPPERCASE PARIZQ expresion PARDER
                     | RTOLOWERCASE PARIZQ expresion PARDER'''    
@@ -416,7 +415,7 @@ def p_expresion(t):
                  | expresion DIVI expresion
                  | expresion POTENCIA expresion
                  | expresion MODULO expresion
-                 | expresion IGUAL expresion
+                 | expresion IGUALIGUAL expresion
                  | expresion DIFERENTE expresion
                  | expresion MAYOR expresion
                  | expresion MENOR expresion
@@ -432,12 +431,8 @@ def p_expresion(t):
         t[0] = Logicas(Logicas(t[2]),t.lineno(1), col(t.slice[2]),t[1],t[3])
 
 def p_expresion_unaria(t):
-    '''expresion    :   resta expresion %prec UMENOS
-                    |   not expresion %prec nnot'''
-    if t[1] == '-':
-        t[0] = Aritmetica(Aritmeticos(t[1]),t.lineno(1), col(t.slice[1]),t[2])
-    else:
-        t[0] = Logicas(Logicas(t[1]),t.lineno(1), col(t.slice[1]),t[2])
+    '''expresion    :  NOT expresion'''
+    t[0] = Logicas(Logicas(t[1]),t.lineno(1), col(t.slice[1]),t[2])
 
 
    
@@ -457,7 +452,7 @@ def p_expresion_primitiva_bool(t):
     else:
         t[0] = Primitivo(Tipos.BOOLEAN, False, t.lineno(1), col(t.slice[1]))
 
-def p_expresion_primitiva_nothing(t):
+def p_expresion_primitiva_any(t):
     '''expresion : RANY'''
     t[0] = Primitivo(Tipos.ANY, "any", t.lineno(1), col(t.slice[1]))
 

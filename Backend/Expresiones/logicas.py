@@ -1,11 +1,11 @@
 
-from ..Diccionario.Diccionario import D_LOGICA
-from ..Abstracto.instruccion import Instruccion
-from ..Tabla.NodeAST import NodeAST
-from ..Tabla.Arbol import Arbol
-from ..Tabla.Tabla_simbolos import TablaSimbolo
-from ..Tabla.Tipo import Logicas, Tipos
-from ..Tabla.Errores import Error
+from Diccionario.Diccionario import D_LOGICA
+from Abstracto.instruccion import Instruccion
+from Tabla.NodeAST import NodeAST
+from Tabla.Arbol import Arbol
+from Tabla.Tabla_simbolos import TablaSimbolo
+from Tabla.Tipo import Logicas, Tipos
+from Tabla.Errores import Error
 
 class Logica(Instruccion):
 

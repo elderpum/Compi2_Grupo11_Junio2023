@@ -1,11 +1,11 @@
 import re
-from ..Abstracto.instruccion import Instruccion
-from ..Tabla.NodeAST import NodeAST
-from ..Tabla.Arbol import Arbol
-from ..Tabla.Tabla_simbolos import TablaSimbolo
-from ..Tabla.Tipo import Tipos, Nativas
-from ..Tabla.Errores import Error
-from ..Diccionario.Diccionario import D_NATIVA
+from Abstracto.instruccion import Instruccion
+from Tabla.NodeAST import NodeAST
+from Tabla.Arbol import Arbol
+from Tabla.Tabla_simbolos import TablaSimbolo
+from Tabla.Tipo import Tipos, Nativas
+from Tabla.Errores import Error
+from Diccionario.Diccionario import D_NATIVA
 import math
 
 class Nativa(Instruccion):

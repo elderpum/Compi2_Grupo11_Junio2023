@@ -1,12 +1,12 @@
-from ..Tabla.Nodo_list import Nodo_list
-from ..Tabla.Simbolo import Simbolo
-from ..Expresiones.Variable import Variable
-from ..Abstracto.instruccion import Instruccion
-from ..Tabla.NodeAST import NodeAST
-from ..Tabla.Arbol import Arbol
-from ..Tabla.Tabla_simbolos import TablaSimbolo
-from ..Tabla.Tipo import CICLICO, Tipos
-from ..Tabla.Errores import Error
+from Tabla.Nodo_list import Node_list
+from Tabla.Simbolo import Simbolo
+from Expresiones.Variable import Variable
+from Abstracto.instruccion import Instruccion
+from Tabla.NodeAST import NodeAST
+from Tabla.Arbol import Arbol
+from Tabla.Tabla_simbolos import TablaSimbolo
+from Tabla.Tipo import CICLICO, Tipos
+from Tabla.Errores import Error
 
 class FUNCION(Instruccion):
 
@@ -27,7 +27,7 @@ class FUNCION(Instruccion):
             if para:
                 nombre = nombre[0:len(nombre)-1]
             nombre+=")"
-            arbol_.Lista_Simbolo.Agregar(Nodo_list(self.id, nombre, tabla_.Entorno, self.fila, self.columna))
+            arbol_.Lista_Simbolo.Agregar(Node_list(self.id, nombre, tabla_.Entorno, self.fila, self.columna))
             tabla_.setVariable(Simbolo([self.parametros, self.instruciones, self.id], Tipos.FUNCTION, self.id, self.fila, self.columna))
         else:
             return Error("Sintactico","Ya existe una funcion con este nombre ", self.fila, self.columna)

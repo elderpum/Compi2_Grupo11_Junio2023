@@ -1,6 +1,7 @@
-from ..Tabla.Tabla_simbolos import TablaSimbolo
-from ..Tabla.Arbol import Arbol
-from ..Tabla.NodeAST import NodeAST
+
+from Tabla.Tabla_simbolos import TablaSimbolo
+from Tabla.Arbol import Arbol
+from Tabla.NodeAST import NodeAST
 from abc import ABC, abstractmethod
 
 

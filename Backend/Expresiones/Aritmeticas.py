@@ -1,11 +1,14 @@
-from ..Abstracto.instruccion import Instruccion
-from ..Tabla.NodeAST import NodeAST
-from ..Tabla.Arbol import Arbol
-from ..Tabla.Tabla_simbolos import TablaSimbolo
-from ..Tabla.Tipo import Tipos, Aritmeticos
-from ..Tabla.Errores import Error
-from ..Diccionario.Diccionario import Dic_Aritmetica
+import sys
+sys.path.append('..')
 import math
+from Abstracto.instruccion import Instruccion
+from Tabla.NodeAST import NodeAST
+from Tabla.Arbol import Arbol
+from Tabla.Tabla_simbolos import TablaSimbolo
+from Tabla.Tipo import Tipos, Aritmeticos
+from Tabla.Errores import Error
+from Diccionario.Diccionario import Dic_Aritmetica
+
 class Aritmetica(Instruccion):
 
     def __init__(self, operador_: Aritmeticos, fila_, columna_, op1_, op2_=None):

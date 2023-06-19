@@ -1,12 +1,12 @@
-from ..Expresiones.Variable import Variable
+from Expresiones.Variable import Variable
 from typing import List
-from ..Abstracto.instruccion import Instruccion
-from ..Tabla.NodeAST import NodeAST
-from ..Tabla.Arbol import Arbol
-from ..Tabla.Simbolo import Simbolo
-from ..Tabla.Tabla_simbolos import TablaSimbolo
-from ..Tabla.Tipo import Tipos
-from ..Tabla.Errores import Error
+from Abstracto.instruccion import Instruccion
+from Tabla.NodeAST import NodeAST
+from Tabla.Arbol import Arbol
+from Tabla.Simbolo import Simbolo
+from Tabla.Tabla_simbolos import TablaSimbolo
+from Tabla.Tipo import Tipos
+from Tabla.Errores import Error
 
 class LENGHT(Instruccion):
 

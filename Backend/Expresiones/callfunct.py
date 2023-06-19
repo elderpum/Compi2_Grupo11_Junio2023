@@ -1,15 +1,15 @@
-from ..Instrucciones.break_ import BREAK
-from ..Instrucciones.continue_ import CONTINUE
+from Instrucciones.break_ import BREAK
+from Instrucciones.continue_ import CONTINUE
 from os import R_OK
-from ..Instrucciones.return_ import RETURN
-from ..Tabla.Simbolo import Simbolo
-from ..Tabla.Nodo_list import Node_list
-from ..Abstracto.instruccion import Instruccion
-from ..Tabla.NodeAST import NodeAST
-from ..Tabla.Arbol import Arbol
-from ..Tabla.Tabla_simbolos import TablaSimbolo
-from ..Tabla.Tipo import CICLICO, Tipos
-from ..Tabla.Errores import Error
+from Instrucciones.return_ import RETURN
+from Tabla.Simbolo import Simbolo
+from Tabla.Nodo_list import Node_list
+from Abstracto.instruccion import Instruccion
+from Tabla.NodeAST import NodeAST
+from Tabla.Arbol import Arbol
+from Tabla.Tabla_simbolos import TablaSimbolo
+from Tabla.Tipo import CICLICO, Tipos
+from Tabla.Errores import Error
 
 class LLAMADA_EXP(Instruccion):
 

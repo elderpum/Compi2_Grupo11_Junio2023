@@ -1,11 +1,11 @@
 from typing import List
-from ..Abstracto.instruccion import Instruccion
-from ..Tabla.NodeAST import NodeAST
-from ..Tabla.Arbol import Arbol
-from ..Tabla.Tabla_simbolos import TablaSimbolo
-from ..Tabla.Tipo import Tipos
-from ..Tabla.Errores import Error
-from ..Tabla.Simbolo import Simbolo
+from Abstracto.instruccion import Instruccion
+from Tabla.NodeAST import NodeAST
+from Tabla.Arbol import Arbol
+from Tabla.Tabla_simbolos import TablaSimbolo
+from Tabla.Tipo import Tipos
+from Tabla.Errores import Error
+from Tabla.Simbolo import Simbolo
 
 class Imprimir(Instruccion):
 

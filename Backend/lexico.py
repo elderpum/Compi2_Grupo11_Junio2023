@@ -1,8 +1,7 @@
 import re
 import ply.lex as lex
-from sintactico import to_parse
 
-
+to_parse = None
 errores = []
 
 # Lista de palabras reservadas
@@ -14,9 +13,9 @@ reserved = {
     'tofixed'       :   'RTOFIXED',
     'toexponential' :   'RTOEXPONENTIAL',
     'tosting'       :   'RTOSTRING',
-    'split'         :   'RSPLIT',
+    
     'typeof'        :   'RTYPEOF',
-    'concat'        :   'RCONCAT',
+    
     'null'          :   'RNULL',
     'any'           :   'RANY',
     'number'        :   'RNUMBER',
@@ -26,7 +25,6 @@ reserved = {
     'console'       :   'RCONSOLE',
     'log'           :   'RLOG',
     'interface'     :   'RINTERFACE',
-    'void'          :   'RVOID',
     'function'      :   'RFUNCTION',
     'for'           :   'RFOR',
     'of'            :   'ROF',
@@ -72,10 +70,7 @@ tokens = [
     'CORDER',
     'LLAVEIZQ',
     'LLAVEDER',
-    'ID',
-    'NUMBER',
-    'DECIMAL',
-    'CADENA',
+    'ID'
 ] + list(reserved.values())
 
 #Tokens
