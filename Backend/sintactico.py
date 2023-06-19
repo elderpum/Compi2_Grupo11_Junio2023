@@ -159,7 +159,6 @@ def p_asignacion_array_struct(t):
     t[0] = Asignacion(None, t.lineno(1), col(t.slice[1]),t[5], t[1], t[3], t[2])
 
 def p_asignacion_array(t):
-    '''array : ID number_array IGUAL expresion'''
     '''array : RLET ID number_array IGUAL expresion'''
     t[0] = Asignacion(None, t.lineno(1), col(t.slice[1]),t[4], t[1], None, t[2])
     
@@ -204,12 +203,12 @@ def p_llamada_Solo(t):
 #function
 
 def p_function(t):
-    '''functionn : r_function ID PARIZQ PARDER instrucciones'''
-    t[0] = FUNCION(t[2],t[5], t.lineno(1), col(t.slice[1]))
+    '''functionn : RFUNCTION ID PARIZQ PARDER LLAVEIZQ instrucciones LLAVEDER'''
+    t[0] = FUNCION(t[2],t[6], t.lineno(1), col(t.slice[1]))
 
 def p_function_parametro(t):
-    '''functionn : r_function ID PARIZQ parametros_function PARDER instrucciones'''
-    t[0] = FUNCION(t[2],t[6], t.lineno(1), col(t.slice[1]), t[4])
+    '''functionn : RFUNCTION ID PARIZQ parametros_function PARDER  LLAVEIZQ instrucciones LLAVEDER'''
+    t[0] = FUNCION(t[2],t[7], t.lineno(1), col(t.slice[1]), t[4])
     
 def p_parametros_function(t):
     '''parametros_function : parametros_function COMA ID'''
@@ -218,13 +217,13 @@ def p_parametros_function(t):
     t[0] = t[1]
     
 def p_parametros_function2(t):
-    '''parametros_function : parametros_function COMA ID DOSPUNTOS DOSPUNTOS tipo'''
+    '''parametros_function : parametros_function COMA ID DOSPUNTOS  tipo'''
     if t[3] != None:
         t[1].append([t[3], t[6]])
     t[0] = t[1]
     
 def p_parametros_function2_id(t):
-    '''parametros_function : parametros_function COMA ID DOSPUNTOS DOSPUNTOS ID'''
+    '''parametros_function : parametros_function COMA ID DOSPUNTOS  ID'''
     if t[3] != None:
         t[1].append([t[3], Tipos.OBJECT])
     t[0] = t[1]
@@ -238,13 +237,13 @@ def p_parametros_function_unico(t):
     
     
 def p_parametros_function_tipo(t):
-    '''parametros_function : ID DOSPUNTOS DOSPUNTOS tipo'''
+    '''parametros_function : ID DOSPUNTOS tipo'''
     if t[1] == None:
         t[0] = []
     else:
         t[0] = [[t[1], t[4]]]
 def p_parametros_function_tipo_id(t):
-    '''parametros_function : ID DOSPUNTOS DOSPUNTOS ID'''
+    '''parametros_function : ID DOSPUNTOS ID'''
     if t[1] == None:
         t[0] = []
     else:
@@ -253,13 +252,9 @@ def p_parametros_function_tipo_id(t):
 #Structs
 
 def p_struct(t):
-    '''struct : r_struct ID parametros_struct'''
-    t[0] = STRUCT(t[2], t[3], t.lineno(1), col(t.slice[2]))
+    '''struct : RINTERFACE ID LLAVEIZQ parametros_struct LLAVEDER'''
+    t[0] = STRUCT(t[2], t[4], t.lineno(1), col(t.slice[2]))
 
-def p_mutable_struct(t):
-    '''struct : r_mutable r_struct ID parametros_struct'''
-    t[0] = STRUCT(t[3], t[4], t.lineno(1), col(t.slice[2]), True)
-    
 def p_parametros_struct(t):
     '''parametros_struct : parametros_struct parametro_struct'''
     if t[2] != None:
@@ -281,14 +276,14 @@ def p_parametro_struct_nulo(t):
         t[0] = [t[1],None]
         
 def p_parametro_struct(t):
-    '''parametro_struct : ID DOSPUNTOS DOSPUNTOS tipo PUNTOCOMA'''
+    '''parametro_struct : ID DOSPUNTOS tipo PUNTOCOMA'''
     if t[1] == None:
         t[0] = []
     else:
         t[0] = [t[1], t[4]]
         
 def p_parametro_struct_id(t):
-    '''parametro_struct : ID DOSPUNTOS DOSPUNTOS ID PUNTOCOMA'''
+    '''parametro_struct : ID DOSPUNTOS ID PUNTOCOMA'''
     if t[1] == None:
         t[0] = []
     else:
@@ -391,29 +386,24 @@ def p_coma_expresion_unico(t):
 def p_expresion_llamada(t):
     '''expresion : ID PARIZQ parametro_print PARDER'''
     t[0] = LLAMADA_EXP(t[1], t[3], t.lineno(1), col(t.slice[1]))
-#nativas
-def p_nativa(t):
-    '''expresion : r_parse PARIZQ tipo COMA expresion PARDER
-                 | r_trunc PARIZQ tipo COMA expresion PARDER
-                 '''
-    t[0] = Nativa(t.lineno(1), col(t.slice[6]), t[3], Nativas(t[1].upper()),t[5])
+
 
 def p_push_expresion(t):
-    '''expresion : r_push not PARIZQ expresion COMA expresion PARDER'''
+    '''expresion : RPUSH not PARIZQ expresion COMA expresion PARDER'''
     t[0] = PUSH(t[4], t[6], t.lineno(1), col(t.slice[1]))
 
 def p_pop_expresion(t):
-    '''expresion : r_pop not PARIZQ expresion PARDER'''
+    '''expresion : RPOP not PARIZQ expresion PARDER'''
     t[0] = POP(t[4], t.lineno(1), col(t.slice[1]))
     
 def p_length_expresion(t):
-    '''expresion : r_length PARIZQ expresion PARDER'''
+    '''expresion : RLENGTH PARIZQ expresion PARDER'''
     t[0] = LENGHT(t[3], t.lineno(1), col(t.slice[1]))
-
+#nativas
 def p_nativa_individual(t):
-    '''expresion    : r_trunc PARIZQ expresion PARDER
-                    | r_string PARIZQ expresion PARDER
-                    | r_typeof PARIZQ expresion PARDER
+    '''expresion    : RTOFIXED PARIZQ expresion PARDER
+                    | RTOSTRING PARIZQ expresion PARDER
+                    | RTYPEOF PARIZQ expresion PARDER
                     | RTOUPPERCASE PARIZQ expresion PARDER
                     | RTOLOWERCASE PARIZQ expresion PARDER'''    
     t[0] = Nativas(t.lineno(1), col(t.slice[4]), t[3], Nativas(t[1].upper()))

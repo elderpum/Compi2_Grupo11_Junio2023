@@ -15,6 +15,7 @@ reserved = {
     'toexponential' :   'RTOEXPONENTIAL',
     'tosting'       :   'RTOSTRING',
     'split'         :   'RSPLIT',
+    'typeof'        :   'RTYPEOF',
     'concat'        :   'RCONCAT',
     'null'          :   'RNULL',
     'any'           :   'RANY',
@@ -39,6 +40,7 @@ reserved = {
     'push'          :   'RPUSH',
     'pop'           :   'RPOP',
     'length'        :   'RLENGTH',
+    'interface'     :   'RINTERFACE',
 
 
 }
