@@ -64,15 +64,15 @@ class Variable(Instruccion):
             except:
                 return Error("Sintactico","La propiedad "+self.id2+" No existe en el struct indicado", self.fila, self.columna)
     
-    def getArray(self, array, arbol, tabla):
-        data = array
+    def getArray(self, array_, arbol_, tabla_):
+        data = array_
         for posicion in self.posiciones:
-            res = posicion.Ejecutar(arbol, tabla)
+            res = posicion.Ejecutar(arbol_, tabla_)
             if isinstance(res, Error):return res
-            if posicion.tipo != Tipos.ENTERO and posicion.tipo!= Tipos.RANGE:
+            if posicion.tipo != Tipos.NUMBER and posicion.tipo!= Tipos.RANGE:
                 return Error("Sintactico","La posición del array debe ser un numero", self.fila, self.columna)
             
-            if posicion.tipo == Tipos.ENTERO:
+            if posicion.tipo == Tipos.NUMBER:
                 res-=1
                 if res < 0:
                     return Error("Sintactico","Posición de Array fuera de rango",self.fila, self.columna)
@@ -103,24 +103,24 @@ class Variable(Instruccion):
         nodo = NodeAST('VARIABLE')
         id = NodeAST("ID")
         if self.id2 == None:
-            id.agregarHijo(self.id)
-            nodo.agregarHijoNodo(id)
+            id.addHijo(self.id)
+            nodo.addHijoNodo(id)
         else:
-            nodo.agregarHijoNodo(self.id.getNodo())
+            nodo.addHijoNodo(self.id.getNodo())
             id2 = NodeAST("ID")
-            nodo.agregarHijo(".")
-            id2.agregarHijo(self.id2)
-            nodo.agregarHijoNodo(id2)
+            nodo.addHijo(".")
+            id2.addHijo(self.id2)
+            nodo.addHijoNodo(id2)
             if self.posiciones is not None:
                 anterior_pos = None
                 nodo_posicion = None
                 for pos in self.posiciones:
                     nodo_posicion = NodeAST("LISTA_ARRAY")
                     if anterior_pos is not None:
-                        nodo_posicion.agregarHijoNodo(anterior_pos)
-                    nodo_posicion.agregarHijo("[")
-                    nodo_posicion.agregarHijoNodo(pos.getNodo())
-                    nodo_posicion.agregarHijo("]")
+                        nodo_posicion.addHijoNodo(anterior_pos)
+                    nodo_posicion.addHijo("[")
+                    nodo_posicion.addHijoNodo(pos.getNodo())
+                    nodo_posicion.addHijo("]")
                     anterior_pos = nodo_posicion
-                nodo.agregarHijoNodo(nodo_posicion)
+                nodo.addHijoNodo(nodo_posicion)
         return nodo

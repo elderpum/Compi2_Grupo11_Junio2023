@@ -388,7 +388,7 @@ def p_nativa_individual(t):
                     | r_typeof PARIZQ expresion PARDER
                     | RTOUPPERCASE PARIZQ expresion PARDER
                     | RTOLOWERCASE PARIZQ expresion PARDER'''    
-    t[0] = Nativas(t.lineno(1), col(t.slice[4]), t[3], Tipos_Nativa(t[1].upper()))
+    t[0] = Nativas(t.lineno(1), col(t.slice[4]), t[3], Nativas(t[1].upper()))
 
 #Expresion Rango
 def p_expresion_rango(t):
