@@ -497,7 +497,7 @@ def parse(i):
     lexer.lineno = 1
     return parser.parse(i)
 
-import Tabla.Arbol as Arbol
+from Tabla.Arbol import Arbol
 instru = parse(entrada)
 ast = Arbol(instru)
 ast.ejecutar()

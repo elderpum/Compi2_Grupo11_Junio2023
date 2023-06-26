@@ -18,7 +18,7 @@ class Asignacion(Instruccion):
         self.ultimo = Tipos.NUMBER
 
     def Ejecutar(self, arbol_: Arbol, tabla_: TablaSimbolo):
-        variable = tabla_.getVariable(self.id, tabla_.funcion)
+        variable = tabla_.getvariable(self.id, tabla_.funcion)
         content = self.expresion.Ejecutar(arbol_, tabla_)
         if self.id2==None:
             if isinstance(content, Error): return content
@@ -29,7 +29,7 @@ class Asignacion(Instruccion):
                     return Error("Sintactico","La variable indicada no existe", self.fila, self.columna)
                 arbol_.Lista_Simbolo.Agregar(Node_list(self.id, self.expresion.tipo.value, tabla_.Entorno, self.fila, self.columna))
                 nuevoSimbolo = Simbolo(content, self.expresion.tipo, self.id, self.fila, self.columna)
-                tabla_.setVariable(nuevoSimbolo)
+                tabla_.setvariable(nuevoSimbolo)
                 return content
             else:
                 if self.Posiciones is not None:
