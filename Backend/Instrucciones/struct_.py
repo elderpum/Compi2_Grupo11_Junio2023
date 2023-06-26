@@ -18,7 +18,7 @@ class STRUCT(Instruccion):
         self.mutable = mutable
         
     def Ejecutar(self, arbol: Arbol, tabla: TablaSimbolo):
-        variable = tabla.getVariable(self.id)
+        variable = tabla.getvariable(self.id)
         content = {1:self.id, 2: self.mutable}
         if variable is None:
             for par in self.parametros:#variable, tipo de variable, tipo obligatorio

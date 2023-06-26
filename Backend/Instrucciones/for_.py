@@ -19,7 +19,7 @@ class FOR(Instruccion):
         self.instruciones = instruciones_
 
     def Ejecutar(self, arbol_: Arbol, tabla_: TablaSimbolo):
-        variable = tabla_.getVariable(self.id)
+        variable = tabla_.getvariable(self.id)
         arbol_.PilaCiclo.append("FOR")
         tip = None
         ciclo = self.expresion.Ejecutar(arbol_, tabla_)

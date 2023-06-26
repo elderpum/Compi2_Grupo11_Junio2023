@@ -10,14 +10,14 @@ from Tabla.Errores import Error
 class Variable(Instruccion):
 
     def __init__(self, id1_, fila_, columna_, id2_=None, posiciones_ = None):
-        super().__init__(Tipos.NOTHING, fila_, columna_)
-        self.id1 = id1_
+        super().__init__(Tipos.ANY, fila_, columna_)
+        self.id = id1_
         self.id2= id2_
         self.posiciones = posiciones_
 
     def Ejecutar(self, arbol_: Arbol, tabla_: TablaSimbolo):
         if self.id2 == None:
-            variable = tabla_.getVariable(self.id)
+            variable = tabla_.getvariable(self.id)
             if variable is not None:
                 self.tipo = variable.getTipo()
                 if self.tipo == Tipos.ARRAY:

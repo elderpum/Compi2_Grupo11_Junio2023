@@ -19,7 +19,7 @@ class LLAMADA_EXP(Instruccion):
         self.parametros = parametros_
         
     def Ejecutar(self, arbol_: Arbol, tabla_: TablaSimbolo):
-        variable = tabla_.getVariable(self.id)
+        variable = tabla_.getvariable(self.id)
         if variable is None:
             return Error("Sintactico","La función indicado no existe", self.fila, self.columna)
         else:

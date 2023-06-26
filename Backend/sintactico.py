@@ -487,7 +487,8 @@ def get_errors():
     return errores
 
 entrada =  ''' 
-let averager = 22;
+let hola = "mundo";
+console.log(hola);
 '''
 
 def parse(i):

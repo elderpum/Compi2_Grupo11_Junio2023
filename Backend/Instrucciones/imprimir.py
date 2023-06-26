@@ -86,8 +86,10 @@ class Imprimir(Instruccion):
         return val
         
     def getNodo(self) -> NodeAST:
-        nodo = NodeAST('CONSOLE.LOG')
-        nodo.addHijo('CONSOLE.LOG')
+        nodo = NodeAST('IMPRIMIR')
+        nodo.addHijo('console')
+        nodo.addHijo('.')
+        nodo.addHijo('log')
         nodo.addHijo('(')
         anterior = None
         nodoParametro = None

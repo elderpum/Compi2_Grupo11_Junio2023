@@ -17,7 +17,7 @@ class FUNCION(Instruccion):
         self.instruciones = instruciones_
 
     def Ejecutar(self, arbol_: Arbol, tabla_: TablaSimbolo):
-        variable = tabla_.getVariable(self.id)
+        variable = tabla_.getvariable(self.id)
         if variable == None:
             nombre = self.id+"("
             para = False
