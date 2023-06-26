@@ -181,7 +181,7 @@ export class IndexComponent implements OnInit {
   saveAsProject() {
     //you can enter your own file name and extension
     if (this.NumTab!=0) {
-      this.writeContents(this.CONTENT, this.ContenidoTab + ".jl", "text/plain");
+      this.writeContents(this.CONTENT, this.ContenidoTab + ".ts", "text/plain");
     }
   }
 
