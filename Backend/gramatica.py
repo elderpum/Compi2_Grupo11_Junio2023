@@ -1,5 +1,145 @@
-import ply.yacc as yacc
-from lexico import to_parse, errores, reserved,lexer,tokens, col
+reserved = {
+    'let'           :   'RLET',
+    'string'        :   'RSTRING',
+    'touppercase'   :   'RTOUPPERCASE',
+    'tolowercase'   :   'RTOLOWERCASE',
+    'tofixed'       :   'RTOFIXED',
+    'toexponential' :   'RTOEXPONENTIAL',
+    'tosting'       :   'RTOSTRING',
+    'typeof'        :   'RTYPEOF',
+    'null'          :   'RNULL',
+    'any'           :   'RANY',
+    'boolean'       :   'RBOOL',
+    'true'          :   'RTRUE',
+    'false'         :   'RFALSE',
+    'console'       :   'RCONSOLE',
+    'log'           :   'RLOG',
+    'interface'     :   'RINTERFACE',
+    'function'      :   'RFUNCTION',
+    'for'           :   'RFOR',
+    'of'            :   'ROF',
+    'while'         :   'RWHILE',
+    'break'         :   'RBREAK',
+    'continue'      :   'RCONTINUE',
+    'return'        :   'RRETURN',
+    'if'            :   'RIF',
+    'else'          :   'RELSE',
+    'elseif'        :   'RELSEIF',
+    'push'          :   'RPUSH',
+    'pop'           :   'RPOP',
+    'length'        :   'RLENGTH',
+    'interface'     :   'RINTERFACE',
+}
+# List of token names
+tokens = [
+    'PUNTO',
+    'COMA',
+    'PUNTOCOMA',
+    'DOSPUNTOS',
+    'IGUAL',
+    'MAS',
+    'MENOS',
+    'POR',
+    'DIVI',
+    'POTENCIA',
+    'MODULO',
+    'MENOR',
+    'MAYOR',
+    'MENORIGUAL',
+    'MAYORIGUAL',
+    'IGUALIGUAL',
+    'DIFERENTE',
+    'AND',
+    'OR',
+    'NOT',
+    'PARIZQ',
+    'PARDER',
+    'CORIZQ',
+    'CORDER',
+    'LLAVEIZQ',
+    'LLAVEDER',
+    'ID',
+    'NUMBER',
+    'CADENA',
+]+ list(reserved.values())
+
+# Regular expression rules for simple tokens
+t_PUNTO         = r'\.'
+t_COMA          = r','
+t_PUNTOCOMA     = r';'
+t_DOSPUNTOS     = r':'
+t_IGUAL         = r'='
+t_MAS           = r'\+'
+t_MENOS         = r'-'
+t_POR           = r'\*'
+t_DIVI          = r'/'
+t_POTENCIA      = r'\^'
+t_MODULO        = r'%'
+t_MENOR         = r'<'
+t_MAYOR         = r'>'
+t_MENORIGUAL    = r'<='
+t_MAYORIGUAL    = r'>='
+t_IGUALIGUAL    = r'==='
+t_DIFERENTE     = r'!=='
+t_AND           = r'&&'
+t_OR            = r'\|\|'
+t_NOT           = r'!'
+t_PARIZQ        = r'\('
+t_PARDER        = r'\)'
+t_CORIZQ        = r'\['
+t_CORDER        = r'\]'
+t_LLAVEIZQ      = r'{'
+t_LLAVEDER      = r'}'
+t_ignore        = ' \t'
+
+# Regular expression rules with action code
+def t_ID(t):
+    r'[a-zA-Z_][a-zA-Z0-9_]*'
+    t.type = reserved.get(t.value, 'ID')  # Check for reserved words
+    return t
+
+def t_STRING(t):
+    r'\".*?\"'
+    t.value = t.value[1:-1]  # Remove quotes from the string
+    return t
+
+def t_NUMBER(t):
+    r'\d+(\.\d+)?'
+    t.value = int(t.value) if '.' not in t.value else float(t.value)
+    return t
+
+# Define a rule to track line numbers
+def t_newline(t):
+    r'\n+'
+    t.lexer.lineno += t.value.count("\n")
+
+#Error
+def t_error(t):
+    print(f"Illegal character '{t.value[0]}'")
+    errors.append(Error("Lexical", f"This is illegal token {t.value[0]}", t.lexer.lineno, col(t)))
+    t.lexer.skip(1)
+
+def col(token):
+    return (token.lexpos - (to_parse.rfind('\n', 0, token.lexpos) + 1)) + 1
+
+# Build the lexer
+from ply import lex
+lexer = lex.lex()
+errors = []
+# Construyendo el analizador sintactico
+
+precedence = (
+    ('left','OR'),
+    ('left','AND'),
+    ('left','IGUALIGUAL','DIFERENTE'),
+    ('left', 'IGUAL','MAYOR','MAYORIGUAL','MENOR','MENORIGUAL'),
+    ('left','MAS','MENOS'),
+    ('left','POR','DIVI','MODULO'),
+    ('right','NOT'),
+    ('right','POTENCIA')
+)
+
+import re
 from Expresiones.Aritmeticas import Aritmetica
 from Expresiones.logicas import Logicas
 from Expresiones.callfunct import LLAMADA_EXP
@@ -11,6 +151,7 @@ from Expresiones.pop_ import POP
 from Expresiones.primitivas import Primitivo
 from Expresiones.relacionales import Relacional
 from Expresiones.lenght_ import LENGHT
+
 from Instrucciones.Asignacion import Asignacion
 from Instrucciones.break_ import BREAK
 from Instrucciones.continue_ import CONTINUE
@@ -22,22 +163,13 @@ from Instrucciones.imprimir import Imprimir
 from Instrucciones.return_ import RETURN
 from Instrucciones.while_ import WHILE
 from Instrucciones.struct_ import STRUCT
+
 from Tabla.Tipo import Tipos, Nativas, Aritmeticos, Relacionales, Logicas
 from Tabla.Errores import Error
 
 start = 'init'
 lista = []
 
-precedence = (
-    ('left','OR'),
-    ('left','AND'),
-    ('left','IGUALIGUAL','DIFERENTE'),
-    ('left','MENOR','MAYOR','MENORIGUAL','MAYORIGUAL'),
-    ('left','MAS','MENOS'),
-    ('left','POR','DIVI','MODULO'),
-    ('right','NOT'),
-    ('right','POTENCIA')
-)
 
 # Definicion de la gramatica para typecraft
 def p_init(t):
@@ -80,7 +212,7 @@ def p_instruccion(t):
 #push, pop, lenght
 
 def p_pushh(t):
-    '''PUSHH : RPUSH  PARIZQ expresion COMA expresion PARDER'''
+    '''PUSHH : RPUSH PARIZQ expresion COMA expresion PARDER'''
     t[0] = PUSH(t[3], t[5], t.lineno(1), col(t.slice[1]))
 
 def p_popp(t):
@@ -163,8 +295,8 @@ def p_asignacion_array(t):
     
 #Asignacion STRUCT
 def p_asignacion_STRUCT_variable(t):
-    '''asignacion : ID lista_id IGUAL expresion'''
-    t[0] = Asignacion(None, t.lineno(1), col(t.slice[1]),t[4], t[1], t[2])
+    '''asignacion : RLET ID lista_id IGUAL expresion'''
+    t[0] = Asignacion(None, t.lineno(1), col(t.slice[1]),t[5], t[2], t[3])
 
 def p_lista_id(t):
     '''lista_id : lista_id COMA ID'''
@@ -193,7 +325,7 @@ def p_lista_id_u_lista(t):
         t[0] = [[t[2], t[3]]]
         
 def p_llamada(t):
-    '''llamada : ID PARIZQ parametro_print PARDER '''
+    '''llamada : ID PARIZQ parametro_print PARDER'''
     t[0] = LLAMADA_EXP(t[1], t[3], t.lineno(1), col(t.slice[1]))
 
 def p_llamada_Solo(t):
@@ -442,7 +574,7 @@ def p_expresion_primitiva_int(t):
     t[0] = Primitivo(Tipos.NUMBER, t[1], t.lineno(1), col(t.slice[1]))
 
 def p_expresion_primitiva_string(t):
-    'expresion    : RSTRING'    
+    'expresion    : CADENA'    
     t[0] = Primitivo(Tipos.STRING, t[1], t.lineno(1), col(t.slice[1]))
 
 def p_expresion_primitiva_bool(t):
@@ -457,10 +589,6 @@ def p_expresion_primitiva_any(t):
     '''expresion : RANY'''
     t[0] = Primitivo(Tipos.ANY, "any", t.lineno(1), col(t.slice[1]))
 
-def p_variable_id(t):
-     '''expresion : ID'''
-     t[0] = Variable(t[1], t.lineno(1), col(t.slice[1]))
-
 # Definicion de expresiones 
 def p_agrupacion_expresion(t):
     'expresion : PARIZQ expresion PARDER'
@@ -469,7 +597,7 @@ def p_agrupacion_expresion(t):
 ###################################
 def p_error(p):
     if p:
-        errores.append(Error('Syntax',
+        errors.append(Error('Syntax',
                    f'error at token {p.value}', p.lineno,  col(p)))
         print(f'Syntax error at token {p.value}', p.lineno, p.lexpos)
         parser.errok()
@@ -484,22 +612,11 @@ parser = yacc.yacc()
 input = ''
 
 def get_errors():
-    return errores
-
-entrada =  ''' 
-let hola = "mundo";
-console.log(hola);
-'''
+    return errors
 
 def parse(i):
     global to_parse
-    global parser
     to_parse = i
     lexer.lineno = 1
     return parser.parse(i)
 
-from Tabla.Arbol import Arbol
-instru = parse(entrada)
-ast = Arbol(instru)
-ast.ejecutar()
-print(ast.getConsola())
