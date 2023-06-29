@@ -21,4 +21,8 @@ export class COMPILADORService {
   GRAFICAR(Contenidos: Contenido): any{
     return this.http.post<any>(`${this.API_URI}/GRAFICAR`, Contenidos);
   }
+
+  TRADUCIR(Contenidos: Contenido): any{
+    return this.http.post<any>(`${this.API_URI}/Traducir`, Contenidos);
+  } 
 }

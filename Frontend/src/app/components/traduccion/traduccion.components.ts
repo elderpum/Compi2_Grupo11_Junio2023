@@ -91,7 +91,7 @@ export class TraduccionComponent implements OnInit {
         icon: 'video',
         hint: 'Traducir C3D',
         stylingMode: 'contained',
-        onClick: this.Compilar.bind(this),
+        onClick: this.Traducir.bind(this),
       },
     },
     {
@@ -216,11 +216,11 @@ export class TraduccionComponent implements OnInit {
     return this.NumError++;
   }
 
-  Compilar(): void{
+  Traducir(): void{
     const cont: Contenido = {
       Contenido: this.CONTENT
     };
-    this.compilador.COMPILAR(cont).subscribe(
+    this.compilador.TRADUCIR(cont).subscribe(
       (res: any) => {
         this.CONSOLA = '';
         this.C3D = '';
