@@ -11,12 +11,14 @@ import { DxPopupModule, DxButtonModule, DxTemplateModule } from 'devextreme-angu
 import { IndexComponent } from './components/index/index.component';
 import { CodemirrorModule } from '@ctrl/ngx-codemirror';
 import { HomeComponent } from './components/home/home.component';
+import { TraduccionComponent } from './components/traduccion/traduccion.components';
 
 @NgModule({
   declarations: [
     AppComponent,
     IndexComponent,
-    HomeComponent
+    HomeComponent,
+    TraduccionComponent
   ],
   imports: [
     BrowserModule,
