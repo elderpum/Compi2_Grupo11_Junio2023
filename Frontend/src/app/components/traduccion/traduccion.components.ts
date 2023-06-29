@@ -58,18 +58,8 @@ export class TraduccionComponent implements OnInit {
       location: 'after',
       widget: 'dxButton',
       options: {
-        icon: 'image',
-        hint: 'AST',
-        stylingMode: 'contained',
-        onClick: this.GRAFICAR.bind(this),
-      },
-    },
-    {
-      location: 'after',
-      widget: 'dxButton',
-      options: {
         icon: 'contentlayout',
-        hint: 'ERROR',
+        hint: 'Tabla de Errores',
         stylingMode: 'contained',
         onClick: this.GRAFICAR2.bind(this),
       },
@@ -79,7 +69,7 @@ export class TraduccionComponent implements OnInit {
       widget: 'dxButton',
       options: {
         icon: 'contentlayout',
-        hint: 'SIMBOLOS',
+        hint: 'Tabla de Símbolos',
         stylingMode: 'contained',
         onClick: this.GRAFICAR3.bind(this),
       },
@@ -248,10 +238,6 @@ export class TraduccionComponent implements OnInit {
       .fit(true)
       .scale(1)
       .renderDot(this.AST);
-  }
-
-  GRAFICAR(): void{
-    this.showSecondPopup = true
   }
 
   GRAFICAR2(): void{

@@ -1,26 +1,4 @@
 <dx-popup
-  title="REPORTE AST"
-  [showCloseButton]="true"
-  [dragEnabled]="false"
-  (onShown)="reports()"
-  [(visible)]="showSecondPopup"
-  width="95%"
-  height="95%"
-  [shading]="true"
-  shadingColor="rgba(0, 0, 0, 0.9)"
->
-  <div
-    #graphContainer
-    class="graphContainer"
-    style="text-align: center"
-    *ngIf="showSecondPopup"
-  >
-    
-    <div id="graph" class="bg-white"></div>
-  </div>
-</dx-popup>
-
-<dx-popup
   title="REPORTE ERRORES"
   [showCloseButton]="true"
   [dragEnabled]="false"

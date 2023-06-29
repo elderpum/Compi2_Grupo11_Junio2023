@@ -61,3 +61,31 @@
   margin: 0;
 }
 
+.graphContainer {
+  overflow: auto;
+}
+
+.imageContainer {
+  display: inline-block;
+  position: relative;
+}
+
+.imageContainer::before,
+.imageContainer::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 20px;
+  background: linear-gradient(to right, transparent, white);
+  pointer-events: none;
+}
+
+.imageContainer::before {
+  left: 0;
+}
+
+.imageContainer::after {
+  right: 0;
+  background: linear-gradient(to left, transparent, white);
+}
