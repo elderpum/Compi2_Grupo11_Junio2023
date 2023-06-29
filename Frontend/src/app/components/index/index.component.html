@@ -166,7 +166,7 @@
               (ngModelChange) = "LlenarContent(element.content)"
               [options]="{
                 theme: 'material',
-                mode: 'julia',
+                mode: 'typescript',
                 styleActiveLine: true,
                 lineNumbers: true,
                 indentUnit: 2,
@@ -188,7 +188,7 @@
               [(ngModel)]="CONSOLA"
               [options]="{
                 theme: 'material',
-                mode: 'julia',
+                mode: 'typescript',
                 readOnly: true,
                 lineNumbers: true,
                 lineWrapping: true,
@@ -199,6 +199,31 @@
               }"
               ></ngx-codemirror>
             </div>
+            <div class="row h-100" style="margin: 0px; padding: 0px;">
+              <div class="col-6 h-100" style="margin: 0px; padding: 0px; padding-right: 5px;">
+                <ngx-codemirror
+                style="margin: 0px; padding: 0px;"
+                [(ngModel)]="element.content"
+                (ngModelChange) = "LlenarC3D(element.content)"
+                [options]="{
+                  theme: 'material',
+                  mode: 'typescript',
+                  styleActiveLine: true,
+                  lineNumbers: true,
+                  indentUnit: 2,
+                  indentWithTabs: true,
+                  autoCloseTags: true,
+                  matchTags: false,
+                  foldGutter: true,
+                  lineWrapping: true,
+                  gutters: ['CodeMirror-linenumbers', 'CodeMirror-foldgutter', 'CodeMirror-lint-markers'],
+                  autoCloseBrackets: true,
+                  matchBrackets: true,
+                  lint: true
+                }"
+                ></ngx-codemirror>
+              </div>
+            </div>
           </div>
         </div>
       </dx-tab-panel>
@@ -206,4 +231,3 @@
     </div>
   </div>
 </div>
-

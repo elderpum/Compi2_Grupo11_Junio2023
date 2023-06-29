@@ -9,16 +9,16 @@ import { Contenido } from '../models/contenido';
 export class COMPILADORService {
 
   // API_URI = 'https://cryptic-wildwood-53384.herokuapp.com';
-  API_URI = 'http://localhost:6600';
+  API_URI = 'http://localhost:5500';
 
 
   constructor(private http: HttpClient, private router: Router) { }
 
   COMPILAR(Contenidos: Contenido): any{
-    return this.http.post<any>(`${this.API_URI}/Compilar/`, Contenidos);
+    return this.http.post<any>(`${this.API_URI}/Compilar`, Contenidos);
   }
 
   GRAFICAR(Contenidos: Contenido): any{
-    return this.http.post<any>(`${this.API_URI}/GRAFICAR/`, Contenidos);
+    return this.http.post<any>(`${this.API_URI}/GRAFICAR`, Contenidos);
   }
 }

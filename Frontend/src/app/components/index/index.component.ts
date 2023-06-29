@@ -40,6 +40,7 @@ export class IndexComponent implements OnInit {
   showSecondPopup = false;
   CONTENT = '';
   CONSOLA = '';
+  C3D = '';
   errores: any;
   simbolos:any;
   buttons: Array<any> = [
@@ -88,7 +89,7 @@ export class IndexComponent implements OnInit {
       widget: 'dxButton',
       options: {
         icon: 'video',
-        hint: 'Compilar',
+        hint: 'Compilar TS',
         stylingMode: 'contained',
         onClick: this.Compilar.bind(this),
       },
@@ -197,6 +198,7 @@ export class IndexComponent implements OnInit {
     this.ContenidoTab = e.addedItems[0].name;
     this.CONSOLA = e.addedItems[0].consola;
     this.CONTENT = e.addedItems[0].content;
+    this.C3D = e.addedItems[0].C3D;
     this.actual = e.addedItems[0];
     this.errores = e.addedItems[0].errores;
     this.simbolos = e.addedItems[0].simbolo;
@@ -204,6 +206,10 @@ export class IndexComponent implements OnInit {
 
   LlenarContent(text: string): void{
     this.CONTENT = text;
+  }
+
+  LlenarC3D(text: string): void{
+    this.C3D = text;
   }
 
   getNumero():number{
@@ -217,9 +223,12 @@ export class IndexComponent implements OnInit {
     this.compilador.COMPILAR(cont).subscribe(
       (res: any) => {
         this.CONSOLA = '';
+        this.C3D = '';
         this.NumError = 1;
         this.CONSOLA = res.consola;
         this.actual.consola = this.CONSOLA;
+        this.C3D = res.c3d;
+        this.actual.C3D = this.C3D;
         this.AST = res.AST;
         this.errores = res.Errores;
         this.simbolos = res.Simbolo;

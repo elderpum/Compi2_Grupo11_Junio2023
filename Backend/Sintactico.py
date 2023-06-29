@@ -680,40 +680,40 @@ def parse(inp):
 
 
 
-# entrada = '''
-# console.log(10.5/2);
-# '''
+entrada = '''
+console.log(10.5/2);
+'''
 
 
-# genAux = Traductor()
-# genAux.limpiarTodo()
-# generador = genAux.obtenerInstancia()
-# instrucciones = parse(entrada)
-# ast = Arbol(instrucciones)
-# tsg = TablaSimbolos('Global')
-# ast.setTablaGlobla(tsg)
-# #print(ast.getInstrucciones())
-# if ast.getInstrucciones() != None:
-#     for instruccion in ast.getInstrucciones():
-#             if isinstance(instruccion, Funciones):
-#                 ast.setFunciones(instruccion)
-#             if isinstance(instruccion, CreacionInterface):
-#                 value = instruccion.interpretar(ast,tsg)
-#                 if isinstance(value, Error):
-#                     ast.getErrores().append(value)
-#                     ast.updateConsola(value.toString())
+genAux = Traductor()
+genAux.limpiarTodo()
+generador = genAux.obtenerInstancia()
+instrucciones = parse(entrada)
+ast = Arbol(instrucciones)
+tsg = TablaSimbolos('Global')
+ast.setTablaGlobla(tsg)
+print(ast.getInstrucciones())
+if ast.getInstrucciones() != None:
+    for instruccion in ast.getInstrucciones():
+            if isinstance(instruccion, Funciones):
+                ast.setFunciones(instruccion)
+            if isinstance(instruccion, CreacionInterface):
+                value = instruccion.interpretar(ast,tsg)
+                if isinstance(value, Error):
+                    ast.getErrores().append(value)
+                    ast.updateConsola(value.toString())
 
-# if ast.getInstrucciones() != None:
-#     for instruccion in ast.getInstrucciones():
+if ast.getInstrucciones() != None:
+    for instruccion in ast.getInstrucciones():
         
-#         if not(isinstance(instruccion, Funciones) ):
-#             if not(isinstance(instruccion,CreacionInterface)):
-#                 value = instruccion.interpretar(ast,tsg)
-#                 if isinstance(value, Error):
-#                     ast.getErrores().append(value)
-#                     ast.updateConsola(value.toString())
-#                 instruccion.traducir(ast,tsg)
-# print('##############Consola')
-# print(ast.getConsola())
-# print('##############C3D')
-# print(generador.getCodigo())
+        if not(isinstance(instruccion, Funciones) ):
+            if not(isinstance(instruccion,CreacionInterface)):
+                value = instruccion.interpretar(ast,tsg)
+                if isinstance(value, Error):
+                    ast.getErrores().append(value)
+                    ast.updateConsola(value.toString())
+                instruccion.traducir(ast,tsg)
+print('##############Consola##############')
+print(ast.getConsola())
+print('##############C3D##############')
+print(generador.getCodigo())
