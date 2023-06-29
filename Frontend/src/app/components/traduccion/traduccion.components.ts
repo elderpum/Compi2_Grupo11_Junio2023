@@ -230,10 +230,10 @@ export class TraduccionComponent implements OnInit {
         this.C3D = res.c3d;
         this.actual.C3D = this.C3D;
         this.AST = res.AST;
-        this.errores = res.Errores;
-        this.simbolos = res.Simbolo;
-        this.actual.simbolo = res.Simbolo;
-        this.actual.errores = res.Errores;
+        this.errores = res.errores;
+        this.simbolos = res.simbolos;
+        this.actual.errores = res.errores;
+        this.actual.simbolos = res.simbolos;
       },
       (err: any) => console.log(err)
     );

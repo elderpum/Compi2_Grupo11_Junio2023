@@ -152,6 +152,8 @@ def traducir():
             }
             diccioErrores.append(objError)
         print(ast.getTablaSimbolosGlobalInterpretada())
+        for error in diccioSimbolos:
+            print(error)
         return json.dumps({'consola': consola, 'errores': diccioErrores, 'simbolos': diccioSimbolos, 'c3d': c3d})
     except Exception as e:
         return {"Error": str(e)}

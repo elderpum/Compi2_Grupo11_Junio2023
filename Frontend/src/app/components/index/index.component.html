@@ -42,7 +42,7 @@
         <table class="table diseñoTabla table-dark">
           <thead style="background-color: #2a2a2a;">
             <tr>
-              <th scope="col">No</th>
+              <th scope="col">Tipo</th>
               <th scope="col">Descripcion</th>
               <th scope="col">Linea</th>
               <th scope="col">Columna</th>
@@ -51,9 +51,9 @@
           </thead>
           <tbody>
             <tr *ngFor="let error of errores">
-              <td>{{ error.numero }}</td>
+              <td>{{ error.tipo }}</td>
               <td>{{ error.descripcion }}</td>
-              <td>{{ error.fila }}</td>
+              <td>{{ error.linea }}</td>
               <td>{{ error.columna }}</td>
               <td>{{ error.fecha }}</td>
             </tr>
@@ -86,18 +86,18 @@
           <table class="table diseñoTabla table-dark">
             <thead style="background-color: #2a2a2a;">
               <tr>
-                <th scope="col">NOMBRE</th>
-                <th scope="col">TIPO</th>
-                <th scope="col">ÁMBITO</th>
-                <th scope="col">FILA</th>
-                <th scope="col">COLUMNA</th>
+                <th scope="col">Entorno</th>
+                <th scope="col">Identificador</th>
+                <th scope="col">Tipo</th>
+                <th scope="col">Fila</th>
+                <th scope="col">Columna</th>
               </tr>
             </thead>
             <tbody>
               <tr *ngFor="let simbolo of simbolos">
-                <td>{{simbolo.nombre}}</td>
-                <td>{{ simbolo.tipo }}</td>
-                <td>{{ simbolo.ambito }}</td>
+                <td>{{simbolo.entorno}}</td>
+                <td>{{simbolo.identificador}}</td>
+                <td>{{simbolo.tipo}}</td>
                 <td>{{ simbolo.fila }}</td>
                 <td>{{ simbolo.columna }}</td>
               </tr>
