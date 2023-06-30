@@ -111,7 +111,7 @@ class Traductor:
     
     #asignacion
     def agregarAsignacion(self, resultado , izquierda):
-        self.codeIn(f'{resultado} = {izquierda}')
+        self.codeIn(f'{resultado} = {izquierda};\n')
     
     #if 
     def agregarIf(self, izquierda, derecha, operador, lbl):
@@ -196,7 +196,7 @@ class Traductor:
         if(self.imprimirString):
             return
         self.imprimirString = True
-        self.inNatives = True
+        self.enNativas = True
 
         self.agregarInicioF('printString')
         # Label para salir de la funcion
@@ -224,13 +224,13 @@ class Traductor:
         self.agregarGoto(compareLbl)
         self.colocarEtiqueta(returnLbl)
         self.agregarFinF()
-        self.inNatives = False
+        self.enNativas = False
         
     def fcompareString(self):
         if self.compareString:
             return
         self.compareString = True
-        self.inNatives = True
+        self.enNativas = True
 
         self.agregarInicioF("compareString")
         # Label para salir de la funcion
@@ -279,4 +279,4 @@ class Traductor:
         self.setStack('P', '0')
         self.colocarEtiqueta(returnLbl)
         self.agregarFinF()
-        self.inNatives = False
+        self.enNativas = False

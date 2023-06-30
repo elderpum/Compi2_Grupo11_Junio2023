@@ -6,6 +6,8 @@ from datetime import datetime
 from ..Instrucciones.BreakC import Break
 from ..Instrucciones.ReturnC import Return
 from ..Instrucciones.ContinueC import Continue
+from ..Helpers.ReturnCo import ReturnCo
+from ..TablaSimbolos.Traductor import Traductor
 
 class If(Abstracta):
     def __init__(self,condicion,bloqueTrue,bloqueFalse, fila, columna):
@@ -45,4 +47,62 @@ class If(Abstracta):
         #             if isinstance(result, Error): arbol.setErrores(result)
         
     def traducir(self, arbol, tabla):
-        pass
+        genAux = Traductor()
+        traductor = genAux.obtenerInstancia()
+        traductor.nuevoComentario('Interpretacion If')
+        condicion = self.condicion.traducir(arbol, tabla)
+        if isinstance(condicion,Error): return condicion
+        if condicion.getType() == Tipos.BOOLEAN:
+            traductor.nuevaEtiqueta()
+            entorno = TablaSimbolos('IF',tabla)
+            for instruccion in self.bloqueTrue:
+                entorno.breakLbl = tabla.breakLbl
+                entorno.continueLbl = tabla.continueLbl
+                entorno.returnLbl = tabla.returnLbl
+                result = instruccion.traducir(arbol,entorno)
+                if isinstance(result,Error):
+                    return result
+                if isinstance(result,Return):
+                    if entorno.returnLbl != '':
+                        traductor.nuevoComentario('Retornar en funcion')
+                        if result.getTrueLbl()=='':
+                            traductor.setStack('P',result.getValor())
+                            traductor.agregarGoto(entorno.returnLbl)
+                            traductor.nuevoComentario('Fin Retorno Funcion')
+                        else:
+                            traductor.colocarEtiqueta(result.getTrueLbl())
+                            traductor.setStack('P', '1')
+                            traductor.agregarGoto(entorno.returnLbl)
+                            traductor.colocarEtiqueta(result.getFalseLbl())
+                            traductor.setStack('P', '0')
+                            traductor.agregarGoto(entorno.returnLbl)
+                        traductor.nuevoComentario('Fin del resultado a retornar en la funcion')
+            salir = traductor.nuevaEtiqueta()
+            traductor.agregarGoto(salir)
+            traductor.colocarEtiqueta(condicion.getFalseLbl())
+            if self.bloqueFalse != None:
+                entorno = TablaSimbolos('ELSE',tabla)  #NUEVO ENTORNO - HIJO - Vacio
+                for instruccion in self.bloqueFalse:
+                    entorno.breakLbl = tabla.breakLbl
+                    entorno.continueLbl = tabla.continueLbl
+                    entorno.returnLbl = tabla.returnLbl
+                    result = instruccion.traducir(arbol, entorno)
+                    if isinstance(result, Error):
+                        return result
+                    if isinstance(result, Return):
+                        traductor.nuevoComentario('Resultado a retornar en la funcion')
+                        if result.getTrueLbl() == '':
+                            traductor.setStack('P', result.getValor())
+                            traductor.agregarGoto(entorno.returnLbl)
+                            traductor.nuevoComentario('Fin del resultado a retornar en la funcion')
+                        else:
+                            traductor.colocarEtiqueta(result.getTrueLbl())
+                            traductor.setStack('P', '1')
+                            traductor.agregarGoto(entorno.returnLbl)
+                            traductor.colocarEtiqueta(result.getFalseLbl())
+                            traductor.setStack('P', '0')
+                            traductor.agregarGoto(entorno.returnLbl)
+                        traductor.nuevoComentario('Fin del resultado a retornar en la funcion')
+            traductor.colocarEtiqueta(salir)
+        traductor.nuevoComentario('Fin de la compilacion de un if')
+

@@ -11,7 +11,7 @@ class SimboloC():
         self.referencia = False
         self.params = None
     def getTipo(self):
-        return self.type
+        return self.tipo
     def getId(self):
         return self.identificador
     def getPos(self):
@@ -46,7 +46,7 @@ class SimboloC():
         return self.length
 
     def setReferencia(self, ref):
-        self.referencia = ref
+        self.referencia = ref   
         
     def getReferencia(self):
         return self.referencia

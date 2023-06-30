@@ -20,6 +20,36 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
+            "allowedCommonJsDependencies": [
+              "codemirror/mode/go/go",
+              "codemirror/mode/javascript/javascript",
+              "codemirror/mode/markdown/markdown",
+              "codemirror/mode/xml/xml",
+              "codemirror/addon/fold/xml-fold",
+              "codemirror/addon/fold/foldgutter",
+              "codemirror/addon/fold/brace-fold",
+              "codemirror/mode/julia/julia",
+              "codemirror/addon/edit/closebrackets",
+              "codemirror/addon/edit/matchbrackets",
+              "codemirror/addon/lint/lint",
+              "codemirror/addon/lint/json-lint",
+              "d3-graphviz",
+              "devextreme/ui/drawer",
+              "devextreme/ui/load_indicator",
+              "devextreme/ui/validation_group",
+              "devextreme/ui/speed_dial_action",
+              "devextreme/ui/slide_out_view",
+              "devextreme/ui/select_box",
+              "devextreme/ui/slide_out",
+              "devextreme/ui/slider",
+              "devextreme/ui/sortable",
+              "devextreme/ui/switch",
+              "devextreme/ui/tag_box",
+              "devextreme/ui/text_area",
+              "devextreme/ui/tile_view",
+              "devextreme/ui/toast",
+              "devextreme/ui/tooltip"
+            ],
             "outputPath": "dist/App",
             "index": "src/index.html",
             "main": "src/main.ts",
@@ -60,8 +90,8 @@
               "budgets": [
                 {
                   "type": "initial",
-                  "maximumWarning": "500kb",
-                  "maximumError": "1mb"
+                  "maximumWarning": "10mb",
+                  "maximumError": "11mb"
                 },
                 {
                   "type": "anyComponentStyle",

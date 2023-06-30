@@ -10,6 +10,8 @@ class Return(Abstracta):
         self.expresion = expresion
         self.value = None
         self.tipo = None
+        self.trueLbl = ''
+        self.falseLbl = ''
         super().__init__(fila, columna)
 
     def interpretar(self, arbol, tabla):
@@ -35,5 +37,23 @@ class Return(Abstracta):
             self.tipo = self.expresion.tipo
             self.value = result
         return self
+    
+    def getValor(self):
+        return self.value
+    def getTipo(self):
+        return self.tipo
+    def getTrueLbl(self):
+        return self.trueLbl
+    def getFalseLbl(self):
+        return self.falseLbl
+        
+    def setValor(self,valor):
+        self.value = valor
+    def setTipo(self,tipo):
+        self.tipo = tipo
+    def setTrueLbl(self,label):
+        self.trueLbl = label
+    def setFalseLbl(self,lable):
+        self.falseLbl= lable
     def traducir(self, arbol, tabla):
         pass

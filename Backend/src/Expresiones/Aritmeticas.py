@@ -6,6 +6,7 @@ from .Identificador import Identificador
 from ..TablaSimbolos.Error import Error
 from ..TablaSimbolos.Traductor import Traductor
 from ..Instrucciones.LlamadaFunciones import LlamadaFuncion
+from ..Helpers.ReturnCo import ReturnCo
 
 class Aritmeticas(Abstracta):
     def __init__(self,operadorIzq,operadorDere, operacion, fila, columna):
@@ -177,41 +178,64 @@ class Aritmeticas(Abstracta):
         generador = genAux.obtenerInstancia()
         temporal = ''
         operador = ''
-        der = ''
-        izq = self.operadorIzq.interpretar(arbol, tabla)
-        if isinstance(izq,Error): return izq
-        if isinstance(self.operadorDere, LlamadaFuncion): 
-            self.operadorDere.guardarTemps(generador,tabla, [izq])
-            der = self.operadorDere.interpretar(arbol,tabla)
-            if isinstance(der,Error): return der
-            self.operadorDere.recuperarTemps(generador, tabla,[izq])
+        izq = ''
+        der = self.operadorDere.traducir(arbol, tabla)
+        if isinstance(der,Error): return der
+        if isinstance(self.operadorIzq, LlamadaFuncion): 
+            self.operadorIzq.guardarTemps(generador,tabla, [der.getValue()])
+            izq = self.operadorDere.interpretar(arbol,tabla)
+            if isinstance(izq,Error): return izq
+            self.operadorIzq.recuperarTemps(generador, tabla,[der.getValue()])
         else:
-            der = self.operadorDere.interpretar(arbol, tabla)
-            if isinstance(der, Error): return der
+            if self.operadorIzq != None:
+                izq = self.operadorIzq.traducir(arbol, tabla)
+                if isinstance(izq, Error): return izq
             
         if self.operacion == Operacion.SUMA:
             operador = '+'
             temporal = generador.agregarTemporal()
-            generador.agregarExpresion(temporal,izq,der,operador)
+            generador.agregarExpresion(temporal,izq.getValue(),der.getValue(),operador)
             self.tipo = Tipos.NUMBER
-            return temporal
+            return ReturnCo(temporal,self.tipo,True)
         elif self.operacion == Operacion.RESTA:
             operador = '-'
             temporal = generador.agregarTemporal()
-            generador.agregarExpresion(temporal, izq, der, operador)
+            if izq == '':
+                generador.agregarExpresion(temporal, "", der.getValue(), operador)
+            else:
+                generador.agregarExpresion(temporal, izq.getValue(), der.getValue(), operador)
             self.tipo = Tipos.NUMBER
-            return temporal
+            return ReturnCo(temporal,self.tipo,True)
         elif self.operacion == Operacion.MULTI:
             operador = '*'
             temporal = generador.agregarTemporal()
-            generador.agregarExpresion(temporal, izq, der, operador)
+            generador.agregarExpresion(temporal, izq.getValue(), der.getValue(), operador)
             self.tipo = Tipos.NUMBER
-            return temporal
+            return ReturnCo(temporal,self.tipo,True)
         elif self.operacion == Operacion.DIV:
-            if der == 0:
+            if der.getValue() == 0:
                 return 'Error: Division entre 0'
             operador = '/'
             temporal = generador.agregarTemporal()
-            generador.agregarExpresion(temporal, izq, der, operador)
+            generador.agregarExpresion(temporal, izq.getValue(), der.getValue(), operador)
             self.tipo = Tipos.NUMBER
-            return temporal
+            return ReturnCo(temporal,self.tipo,True)
+        elif self.operacion == Operacion.MODULO:
+            if der.getValue() == 0:
+                return 'Error: Division entre 0'
+            operador = '%'
+            temporal = generador.agregarTemporal()
+            generador.agregarExpresion(temporal, izq.getValue(), der.getValue(), operador)
+            self.tipo = Tipos.NUMBER
+            return ReturnCo(temporal,self.tipo,True)
+        elif self.operacion == Operacion.POTENCIA:
+            temporal = generador.agregarTemporal()
+            #generador.agregarAsignacion(str(pow(int(izq.getValue()),int(der.getValue()))),temporal)
+            generador.setImportacion('math')
+            generador.agregarAsignacion(f'math.Pow({izq.getValue()},{der.getValue()})',temporal)
+            self.tipo = Tipos.NUMBER
+            return ReturnCo(f'math.Pow({izq.getValue()},{der.getValue()})',self.tipo,True)
+            pass
+        
+    def poten():
+        pass

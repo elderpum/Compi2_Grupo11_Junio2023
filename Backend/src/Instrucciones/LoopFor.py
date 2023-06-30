@@ -7,6 +7,8 @@ from datetime import datetime
 from ..Instrucciones.BreakC import Break
 from ..Instrucciones.ContinueC import Continue
 from ..Instrucciones.ReturnC import Return
+from ..TablaSimbolos.Traductor import Traductor
+from ..Helpers.ReturnCo import ReturnCo
 
 class LoopFor(Abstracta):
     def __init__(self,inicio, condicion, incremento, instrucciones, fila, columna):
@@ -57,4 +59,20 @@ class LoopFor(Abstracta):
                 break
         return None
     def traducir(self, arbol, tabla):
-        pass
+        auxGen = Traductor()
+        traductor = auxGen.obtenerInstancia()
+        traductor.nuevoComentario('Traduccion For')
+        bandera = True
+        entorno = tabla
+        if tabla.getSimbolo(self.inicio.identificador):
+            bandera = False
+        nuevaTabla = TablaSimbolos('For',tabla)
+        inicio = self.inicio.traducir(arbol, nuevaTabla)
+        if isinstance(inicio,Error): return inicio
+        condicion= self.condicion.traducir(arbol, nuevaTabla)
+        if isinstance(condicion,Error):return condicion
+        
+        if self.condicion.tipo != Tipos.BOOLEAN:
+            return Error('Semantico', 'Condicion no booleana',self.fila,self.columna,datetime.now().date())
+        while condicion:
+            pass

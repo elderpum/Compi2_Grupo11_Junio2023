@@ -2,6 +2,8 @@ from ..Abstracta.Abstracta import Abstracta
 from ..TablaSimbolos.TablaSimbolos import TablaSimbolos
 from ..TablaSimbolos.Error import Error
 from ..Helpers.TiposDatos import Tipos
+from ..Helpers.ReturnCo import ReturnCo
+from ..TablaSimbolos.Traductor import Traductor
 from datetime import datetime
 
 class Asignacion(Abstracta):
@@ -38,5 +40,19 @@ class Asignacion(Abstracta):
         elif simb != None: 
             simb.setAtributos(nuevoValor)
             tabla.actualizarObjeto(simb)
-    def traducir(self, arbol, tabla):
-        pass
+    def traducir(self, arbol, tabla:TablaSimbolos):
+        genAux = Traductor()
+        traductor = genAux.obtenerInstancia()
+        traductor.nuevoComentario('Asignacion de variable')
+        simbolo = tabla.getSimbolo3(self.identificador) #
+        if simbolo == None:
+            traductor.nuevoComentario('Variable no encontrada')
+            return Error('Semantico','No se encontro la variable '+str(self.identificador),self.fila,self.columna,datetime.now().date())
+        #verificar tipos por errores 
+        if simbolo.getTipo() == self.valor.getTipo():
+            temp = self.valor.traducir(arbol,tabla)
+            traductor.agregarAsignacion(temp.getValue(),str(simbolo.getId()))
+            traductor.nuevoComentario('FIn asignacion variable')
+        else: 
+            traductor.nuevoComentario('Tipos de datos erroneos para asignacion')
+            return Error('Semantico','Tipos de datos errones ',self.fila,self.columna,datetime.now().date())

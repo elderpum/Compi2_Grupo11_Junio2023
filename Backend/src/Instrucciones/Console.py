@@ -26,19 +26,19 @@ class Console(Abstracta):
         generador = genAux.obtenerInstancia()
         
         for valor in self.expresiones:
-            value = valor.interpretar(arbol,tabla)
+            value = valor.traducir(arbol,tabla)
             if isinstance(value, Error): return value
             if valor.getTipo()  == Tipos.NUMBER:
-                if isinstance(value,int) and not isinstance(value, bool):
-                    generador.agregarImprimir('d',value)
+                if isinstance(value.getValue(),int) and not isinstance(value.getValue(), bool):
+                    generador.agregarImprimir('d',value.getValue())
                 elif isinstance(value, float):
-                    generador.agregarImprimir('f',value)
+                    generador.agregarImprimir('f',value.getValue())
             elif valor.getTipo() == Tipos.STRING:
                 generador.fPrintString()
                 parametroTemporal = generador.agregarTemporal()
                 generador.agregarExpresion(parametroTemporal, 'P', tabla.size, '+')
                 generador.agregarExpresion(parametroTemporal, parametroTemporal, '1', '+')
-                generador.setStack(parametroTemporal, str(value))
+                generador.setStack(parametroTemporal, str(value.getValue()))
                 
                 generador.nuevoEntorno(tabla.size)
                 generador.llamarFun('printString')

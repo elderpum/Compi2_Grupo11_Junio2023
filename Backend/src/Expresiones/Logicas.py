@@ -1,7 +1,9 @@
 from ..Abstracta.Abstracta import Abstracta
 from ..Helpers.OperacionesLogicas import OperacionL
 from ..Helpers.TiposDatos import Tipos
+from ..Helpers.ReturnCo import ReturnCo
 from ..TablaSimbolos.Traductor import Traductor
+from ..TablaSimbolos.Error import Error
 
 class Logicas(Abstracta):
     def __init__(self,operadorIzq, operadorDere, operacion, fila, columna):
@@ -72,3 +74,65 @@ class Logicas(Abstracta):
     def traducir(self, arbol, tabla):
         tAux = Traductor()
         traductor = tAux.obtenerInstancia()
+        traductor.nuevoComentario("Compilacion de Expresion Logica")
+        self.checkLabels()
+        lblAndOr = ''
+        if self.operacion == OperacionL.AND:
+            lblAndOr = traductor.nuevaEtiqueta()
+            
+            self.operadorIzq.setTrueLbl(lblAndOr)
+            self.operadorDere.setTrueLbl(self.trueLbl)
+            self.operadorIzq.falseLbl = self.operadorDere.falseLbl = self.falseLbl
+        elif self.operacion == OperacionL.OR:
+            self.operadorIzq.setTrueLbl(self.trueLbl)
+            self.operadorDere.setTrueLbl(self.trueLbl)
+            lblAndOr = traductor.nuevaEtiqueta()
+            
+            self.operadorIzq.setFalseLbl(lblAndOr)
+            self.operadorDere.setFalseLbl(self.falseLbl)
+        elif self.operacion == OperacionL.NOT:
+            self.operadorDere.setFalseLbl(self.trueLbl)
+            self.operadorDere.setTrueLbl(self.falseLbl)
+            lblNot = self.operadorDere.traducir(arbol,tabla)
+            if isinstance(lblNot,Error): return lblNot
+            lbltrue = lblNot.getTrueLbl()
+            lblfalse = lblNot.getFalseLbl()
+            lblNot.setTrueLbl(lblfalse)
+            lblNot.setFalseLbl(lbltrue)
+            self.tipo = Tipos.BOOLEAN
+            return lblNot
+        izq = self.operadorIzq.traducir(arbol,tabla)
+        if isinstance(izq, Error): return izq
+        traductor.colocarEtiqueta(lblAndOr)
+        dere = self.operadorDere.traducir(arbol,tabla)
+        if isinstance(dere,Error): return dere
+        traductor.nuevoComentario('Fin expresion logica')
+        traductor.agregarEspacio()
+        ret = ReturnCo(None, Tipos.BOOLEAN, False)
+        ret.setTrueLbl(self.trueLbl)
+        ret.setFalseLbl(self.falseLbl)
+        return ret
+
+
+    def checkLabels(self):
+        genAux = Traductor()
+        generador = genAux.obtenerInstancia()
+        if self.trueLbl == '':
+            self.trueLbl = generador.nuevaEtiqueta()
+        if self.falseLbl == '':
+            self.falseLbl = generador.nuevaEtiqueta()
+            
+    # def getOperador(self):
+    #     if self.operacion == OperacionR.IGUALDAD:
+    #         return '=='
+    #     if self.operacion == OperacionR.DIFERENTE:
+    #         return '!='
+    #     if self.operacion == OperacionR.MAYOR:
+    #         return '>'
+    #     if self.operacion == OperacionR.MENOR:
+    #         return '<'
+    #     if self.operacion == OperacionR.MAYORI:
+    #         return '>='
+    #     if self.operacion == OperacionR.MAYORI:
+    #         return '<='
+        

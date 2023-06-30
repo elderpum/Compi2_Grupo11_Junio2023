@@ -3,6 +3,7 @@ from ..Helpers.OperacionesRelacionales import OperacionR
 from ..Helpers.TiposDatos import Tipos
 from ..TablaSimbolos.Error import Error
 from ..TablaSimbolos.Traductor import Traductor
+from ..Helpers.ReturnCo import ReturnCo
 
 class Relacionales(Abstracta):
     
@@ -176,27 +177,28 @@ class Relacionales(Abstracta):
         genAux = Traductor()
         generador = genAux.obtenerInstancia()
         generador.nuevoComentario("Traduccion de Expresion Relacional")
-        izq = self.operadorIzq.interpretar(arbol,tabla)
+        izq = self.operadorIzq.traducir(arbol,tabla)
         if isinstance(izq,Error): return izq
         dere = None
+        result = ReturnCo(None,Tipos.BOOLEAN,False)
         
-        if self.operadorIzq.getTipo() != Tipos.BOOLEAN:
-            dere = self.operadorDere.interpretar(arbol,tabla)
+        if izq.getType() != Tipos.BOOLEAN:
+            dere = self.operadorDere.traducir(arbol,tabla)
             if isinstance(dere,Error): return dere
-            if (self.operadorIzq.getTipo() == Tipos.NUMBER) and (self.operadorDere.getTipo() == Tipos.NUMBER):
+            if (izq.getType() == Tipos.NUMBER) and (dere.getType() == Tipos.NUMBER):
                 self.checkLabels()
-                generador.agregarIf(izq,dere,self.getOperador(),self.getTrueLbl())
+                generador.agregarIf(izq.getValue(),dere.getValue(),self.getOperador(),self.getTrueLbl())
                 generador.agregarGoto(self.getFalseLbl())
-            elif (self.operadorIzq.getTipo() == Tipos.STRING) and (self.operadorDere.getTipo() == Tipos.STRING):
+            elif (izq.getType() == Tipos.STRING) and (dere.getType() == Tipos.STRING):
                 if self.operacion == OperacionR.IGUALDAD or self.operacion == OperacionR.DIFERENTE:
                     generador.fcompareString()
                     paramTemp = generador.agregarTemporal()
                     generador.agregarExpresion(paramTemp, 'P',tabla.size, '+')
                     generador.agregarExpresion(paramTemp, paramTemp,'1', '+')
-                    generador.setStack(paramTemp,izq)
+                    generador.setStack(paramTemp,izq.getValue())
                     
                     generador.agregarExpresion(paramTemp, paramTemp,'1', '+')
-                    generador.setStack(paramTemp,dere)
+                    generador.setStack(paramTemp,dere.getValue())
                     
                     generador.nuevoEntorno(tabla.size)
                     generador.llamarFun('compareString')
@@ -208,11 +210,14 @@ class Relacionales(Abstracta):
                     
                     generador.agregarIf(temp,self.getNum(), '==' ,self.trueLbl)
                     generador.agregarGoto(self.falseLbl)
-                    
-                    return
+                    result.setTrueLbl(self.trueLbl)
+                    result.setFalseLbl(self.falseLbl)
+                    return result
         generador.nuevoComentario("Fin de compilacion de Expresion Relacional")
         generador.agregarEspacio()
-        return
+        result.setTrueLbl(self.trueLbl)
+        result.setFalseLbl(self.falseLbl)
+        return result
                     
                 
     def getNum(self):
@@ -239,6 +244,6 @@ class Relacionales(Abstracta):
             return '<'
         if self.operacion == OperacionR.MAYORI:
             return '>='
-        if self.operacion == OperacionR.MAYORI:
+        if self.operacion == OperacionR.MENORI:
             return '<='
         

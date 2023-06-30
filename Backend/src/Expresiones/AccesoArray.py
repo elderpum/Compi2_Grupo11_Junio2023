@@ -1,6 +1,8 @@
 from ..TablaSimbolos.Error import Error
 from ..Abstracta.Abstracta import Abstracta
 from ..Helpers.TiposDatos import Tipos
+from ..TablaSimbolos.Traductor import Traductor
+from ..Helpers.ReturnCo import ReturnCo
 from datetime import datetime
 
 class AccesoArray(Abstracta):
@@ -126,4 +128,64 @@ class AccesoArray(Abstracta):
             return Error('Semantico', 'La variable no es un arreglo', self.fila, self.columna,datetime.now().date())
 
     def traducir(self, arbol, tabla):
-        pass
+        auxGen = Traductor()
+        traductor = auxGen.obtenerInstancia()
+        traductor.nuevoComentario("Acceso a la variable " + self.identificador)
+        var = ''
+        if self.identificador:
+            var = tabla.getSimbolo3(self.identificador)
+            if var == None:
+                traductor.nuevoComentario("Fin de compilacion de Acceso por error")
+                return Error("Semantico", "Variable no encontrada", self.fila, self.columna,datetime.now().date())
+        else:
+            var = ''
+        traductor.manejoError()
+        temp = traductor.agregarTemporal()
+        tempPos = var.posicion
+        if not var.isGlobal:
+            tempPos = traductor.agregarTemporal()
+            traductor.agregarExpresion(tempPos, 'P', var.pos, "+")
+        traductor.getStack(temp, tempPos)
+        x = 0
+        tipo = var.getTipo()
+        tipoAux = var.getTipoAux()
+        for value in self.indice:
+            x += 1
+            tmp3 = traductor.agregarTemporal()
+            tmp4 = traductor.agregarTemporal()
+            tmp5 = traductor.agregarTemporal()
+            Lbl1 = traductor.nuevaEtiqueta()
+            Lbl2 = traductor.nuevaEtiqueta()
+            Lbl3 = traductor.nuevaEtiqueta()
+
+            indice = value.traducir(arbol, tabla)
+            traductor.agregarExpresion(tmp3, temp, indice.getValue(), "+")
+
+            traductor.agregarIf(indice.getValue(),'1','<',Lbl1) #Agregado
+            traductor.getHeap(tmp5, temp)
+            traductor.agregarIf(indice.getValue(),tmp5,'>', Lbl1) #Agregado
+            traductor.agregarGoto(Lbl2)
+            traductor.colocarEtiqueta(Lbl1)
+            traductor.llamarFun('BoundsError')
+            traductor.agregarGoto(Lbl3)
+            traductor.colocarEtiqueta(Lbl2)
+
+            traductor.getHeap(tmp4, tmp3)
+
+            traductor.agregarGoto(Lbl3)
+            traductor.putLabel(Lbl3)
+
+            temp = tmp4
+            if x == len(self.indice):
+                var.setTipo(var.getTipoAux())
+            else:
+                if isinstance(var.getTipoAux(), list):
+                    var.setTipo(var.getTipoAux()[0])
+                    var.setTipoAux(var.getTipoAux()[1])
+                else:
+                    return Error("Semantico", "No se puede acceder al arreglo", self.fila, self.colum)
+        traductor.nuevoComentario(f'Fin compilacion de acceso de la variable {self.id}')
+        space = ReturnCo(tmp4, var.getTipo(), True, var.getTipoAux())
+        var.setTipo(tipo)
+        var.setTipoAux(tipoAux)
+        return space

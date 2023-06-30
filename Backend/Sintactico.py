@@ -93,7 +93,11 @@ def p_instrucciones_evaluar(t):
                     | de_control PTYCOMA
                     | imprimir PTYCOMA
                     | creacionStruct PTYCOMA
-                    | nativas
+                    '''
+    t[0] = t[1]
+    
+def p_instrucciones_evaluar_1(t):
+    '''instruccion : nativas
                     | declaraciones
                     | condicional_ifs
                     | ciclos
@@ -681,7 +685,11 @@ def parse(inp):
 
 
 entrada = '''
-console.log(10.5/2);
+let val1:number = 1;
+let val2:number = 10;
+let val3:number = 2021.2020;
+
+
 '''
 
 
@@ -692,7 +700,7 @@ instrucciones = parse(entrada)
 ast = Arbol(instrucciones)
 tsg = TablaSimbolos('Global')
 ast.setTablaGlobla(tsg)
-print(ast.getInstrucciones())
+#print(ast.getInstrucciones())
 if ast.getInstrucciones() != None:
     for instruccion in ast.getInstrucciones():
             if isinstance(instruccion, Funciones):
@@ -713,7 +721,7 @@ if ast.getInstrucciones() != None:
                     ast.getErrores().append(value)
                     ast.updateConsola(value.toString())
                 instruccion.traducir(ast,tsg)
-print('##############Consola##############')
+print('##############Consola')
 print(ast.getConsola())
-print('##############C3D##############')
+print('##############C3D')
 print(generador.getCodigo())

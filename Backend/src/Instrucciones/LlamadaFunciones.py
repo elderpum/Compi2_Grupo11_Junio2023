@@ -7,6 +7,7 @@ from ..Helpers.TiposDatos import Tipos
 from ..Expresiones.Identificador import Identificador
 from datetime import datetime
 from ..TablaSimbolos.Traductor import Traductor
+from ..Helpers.ReturnCo import ReturnCo
 
 class LlamadaFuncion(Abstracta):
 
@@ -15,6 +16,7 @@ class LlamadaFuncion(Abstracta):
         self.parametros = parametros
         self.trueLbl = ''
         self.falseLbl = ''
+        self.tipo = None
         super().__init__(fila, columna)
         
     def getTipo(self):
@@ -60,8 +62,66 @@ class LlamadaFuncion(Abstracta):
         if isinstance(value, Error): return value
         self.tipo = result.tipo
         return value
+    
+    
     def traducir(self, arbol, tabla):
-        pass
+        funcion = arbol.getFuncion(self.nombre)
+        genAux = Traductor()
+        traductor = genAux.obtenerInstancia()
+        if funcion !=None:
+            traductor.nuevoComentario(f'Llamada a funcion {self.nombre}')
+            paramValues= []
+            temporales = []
+            size = tabla.size
+            
+            for parametro in self.parametros:
+                if isinstance(parametro,LlamadaFuncion):
+                    self.guardarTemps(traductor,tabla,temporales)
+                    a = parametro.traducir(arbol,tabla)
+                    if isinstance(a,Error): return a
+                    paramValues.append(a)
+                    self.recuperarTemps(traductor,tabla, temporales)
+                else:
+                    value = parametro.traducir(arbol,tabla)
+                    if isinstance(value,Error): return value
+                    paramValues.append(value)
+                    temporales.append(value.getValue())
+            temp = traductor.agregarTemporal()
+            traductor.agregarExpresion(temp,'P',size+1,'+')
+            aux = 0
+            if len(funcion.parametros) == len(paramValues):
+                for param in paramValues:
+                    if funcion.parametros[aux]['tipo'] == param.getType():
+                        aux +=1
+                        traductor.setStack(temp, param.getValue())
+                        if aux != len(paramValues):
+                            traductor.agregarExpresion(temp,temp,1,'+')
+                    else:
+                        traductor.nuevoComentario('Tipo de parametros no valido, Error')
+                        return Error('Semantico','Tipo de parametros no valido',self.fila,self.columna, datetime.now().date())
+            traductor.nuevoEntorno(size)
+            #self.getFuncion(generator=generador) # Sirve para llamar a una funcion nativa
+            traductor.llamarFun(funcion.identificador)
+            traductor.getStack(temp,'P')
+            traductor.retornarEntorno(size)
+            traductor.nuevoComentario(f'Fin de la llamada a la funcion {self.nombre}')
+            traductor.agregarEspacio()
+            
+            if funcion.tipo != Tipos.BOOLEAN:
+                return ReturnCo(temp,funcion.tipo, True)
+            else:
+                traductor.nuevoComentario('Recuperacion de booleano')
+                if self.trueLbl == '':
+                    self.trueLbl = traductor.nuevaEtiqueta()
+                if self.falseLbl == '':
+                    self.falseLbl = traductor.nuevaEtiqueta()
+                traductor.agregarIf(temp,1,'==',self.trueLbl)
+                traductor.agregarGoto(self.falseLbl)
+                ret = ReturnCo(temp, funcion.tipo, True)
+                ret.trueLbl = self.trueLbl
+                ret.falseLbl = self.falseLbl
+                traductor.nuevoComentario('Fin de recuperacion de booleano')
+                return ret
     
     
     def guardarTemps(self, generador:Traductor, tabla, tmp2):
